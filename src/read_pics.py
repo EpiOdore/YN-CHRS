@@ -4,6 +4,7 @@ Script python pour ouvrir les fichiers de traces de clavier
 """
 import os
 from os.path import isfile, join
+from sklearn import cluster
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -69,9 +70,19 @@ def get_all_bin(path):
 
     return dico_files_content
 
-if __name__ == "__main__":
-    dico = get_all_bin("../data/")
 
+def get_letters_trames(path):
+    dico = get_all_bin(path)
+    name = "A"
+    trames = []
+    while (name <= "Z"):
+        trames += dico["pics_" + name][0][0:int(len(dico["pics_" + name][0]) * 0.8)]
+        name = chr(ord(name) + 1)
+    return trames
+
+
+if __name__ == "__main__":
+    trames = get_letters_trames("../data/")
     """pics_nokey, info = get_pics_from_file("../data/pics_NOKEY.bin")
     pics_pad0, info = get_pics_from_file("../data/pics_0.bin")
 
