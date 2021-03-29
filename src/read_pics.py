@@ -71,6 +71,7 @@ def get_all_bin(path):
 
 if __name__ == "__main__":
     dico = get_all_bin("../data/")
+
     """pics_nokey, info = get_pics_from_file("../data/pics_NOKEY.bin")
     pics_pad0, info = get_pics_from_file("../data/pics_0.bin")
 
