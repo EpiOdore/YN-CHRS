@@ -3,8 +3,9 @@ Script python pour ouvrir les fichiers de traces de clavier
 
 """
 import os
+import time
 from os.path import isfile, join
-from sklearn import cluster
+from sklearn.cluster import AgglomerativeClustering
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -80,9 +81,18 @@ def get_letters_trames(path):
         name = chr(ord(name) + 1)
     return trames
 
+def get_clusters(listoflists, number):
+    listoflists = np.array(listoflists)
+    clustering = AgglomerativeClustering(n_clusters=number).fit_predict(listoflists)
+    return clustering
 
 if __name__ == "__main__":
     trames = get_letters_trames("../data/")
+    start = time.perf_counter()
+    print("hey")
+    print(get_clusters(trames, 26))
+    end = time.perf_counter()
+    print("running time: ", end - start)
     """pics_nokey, info = get_pics_from_file("../data/pics_NOKEY.bin")
     pics_pad0, info = get_pics_from_file("../data/pics_0.bin")
 
