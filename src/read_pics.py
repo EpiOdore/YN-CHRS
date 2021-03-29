@@ -3,13 +3,13 @@ Script python pour ouvrir les fichiers de traces de clavier
 
 """
 import os
-import time
 from os.path import isfile, join
 from sklearn.cluster import AgglomerativeClustering
 
 import matplotlib.pyplot as plt
 import numpy as np
 import time
+import csv
 
 def read_int(f):
     ba = bytearray(4)
@@ -87,13 +87,18 @@ def get_clusters(listoflists, number):
     return clustering
 
 if __name__ == "__main__":
-    trames = get_letters_trames("../data/", 0.1)
-    start = time.perf_counter()
-    print("hey")
-    print(list(get_clusters(trames, 26)[0:100]).count(8))
+    file = open("statictrames-0_2.csv", 'w')
+    write = csv.writer(file)
 
+    trames = get_letters_trames("../data/", 0.3)
+    start = time.perf_counter()
+    clusters = list(get_clusters(trames, 26))
+    print(clusters)
     end = time.perf_counter()
+
     print("running time: ", end - start)
+    write.writerow(clusters)
+    file.close()
     """pics_nokey, info = get_pics_from_file("../data/pics_NOKEY.bin")
     pics_pad0, info = get_pics_from_file("../data/pics_0.bin")
 
