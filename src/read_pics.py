@@ -72,12 +72,12 @@ def get_all_bin(path):
     return dico_files_content
 
 
-def get_letters_trames(path):
+def get_letters_trames(path, percent):
     dico = get_all_bin(path)
     name = "A"
     trames = []
     while (name <= "Z"):
-        trames += dico["pics_" + name][0][0:int(len(dico["pics_" + name][0]) * 0.8)]
+        trames += dico["pics_" + name][0][0:int(len(dico["pics_" + name][0]) * percent)]
         name = chr(ord(name) + 1)
     return trames
 
@@ -87,10 +87,11 @@ def get_clusters(listoflists, number):
     return clustering
 
 if __name__ == "__main__":
-    trames = get_letters_trames("../data/")
+    trames = get_letters_trames("../data/", 0.1)
     start = time.perf_counter()
     print("hey")
-    print(get_clusters(trames, 26))
+    print(list(get_clusters(trames, 26)[0:100]).count(8))
+
     end = time.perf_counter()
     print("running time: ", end - start)
     """pics_nokey, info = get_pics_from_file("../data/pics_NOKEY.bin")
