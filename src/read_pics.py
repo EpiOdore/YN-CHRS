@@ -2,6 +2,8 @@
 Script python pour ouvrir les fichiers de traces de clavier
 
 """
+import os
+from os.path import isfile, join
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -54,28 +56,49 @@ def get_pics_from_file(filename):
     f_pic.close()
     return tab_pics, info
 
+
+def get_all_bin(path):
+    all_files = [f for f in os.listdir(path) if isfile(join(path, f))]
+
+    print(all_files)
+
+    dico_files_content = {}
+
+    for file in all_files:
+        dico_files_content[os.path.splitext(file)[0]] = get_pics_from_file(path + file)
+
+    return dico_files_content
+
 if __name__ == "__main__":
-    pics_nokey, info = get_pics_from_file("../data/pics_NOKEY.bin")
+    dico = get_all_bin("../data/")
+    """pics_nokey, info = get_pics_from_file("../data/pics_NOKEY.bin")
     pics_pad0, info = get_pics_from_file("../data/pics_0.bin")
 
     ######### Pics ############
-    # NO KEY
+    # PAD-0 0
     plt.figure(1)
-    plt.subplot(211)
+    plt.subplot(311)
     plt.plot(range(1,info["nb_pics"]+1), pics_nokey[0], 'ko')
     plt.xlabel('numéro de pic')
     plt.ylabel('valeur du pic')
-    plt.title('no key')
+    plt.title('PAD-0 0')
     plt.ylim(0, 1.5)
     plt.grid(b=True, which='both')
-    # PAD-0
-    plt.subplot(212)
-    plt.plot(range(1,info["nb_pics"]+1), pics_pad0[0], 'ko')
+    # PAD-0 1
+    plt.subplot(312)
+    plt.plot(range(1,info["nb_pics"]+1), pics_nokey[1], 'ko')
     plt.xlabel('numéro de pic')
     plt.ylabel('valeur du pic')
-    plt.title('PAD-0')
+    plt.title('PAD-0 1')
+    plt.ylim(0, 1.5)
+    plt.grid(b=True, which='both')
+    # PAD-0 2
+    plt.subplot(313)
+    plt.plot(range(1,info["nb_pics"]+1), pics_nokey[2], 'ko')
+    plt.xlabel('numéro de pic')
+    plt.ylabel('valeur du pic')
+    plt.title('PAD-0 2')
     plt.ylim(0, 1.5)
     plt.grid(b=True, which='both')
     #
-    plt.show()
-    
+    plt.show()"""
