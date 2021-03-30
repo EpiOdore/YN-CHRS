@@ -5,7 +5,7 @@ Script python pour ouvrir les fichiers de traces de clavier
 import mean_clustering
 import os
 from os.path import isfile, join
-from sklearn.cluster import AgglomerativeClustering
+from sklearn.cluster import AgglomerativeClustering, KMeans
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -95,7 +95,8 @@ def get_letters_trames(path, percent):
 # OUT: list(int)
 def get_clusters(listoflists, number):
     listoflists = np.array(listoflists)
-    clustering = AgglomerativeClustering(n_clusters=number).fit_predict(listoflists)
+    # clustering = AgglomerativeClustering(n_clusters=number).fit_predict(listoflists)
+    clustering = KMeans(n_clusters=number).fit_predict(listoflists)
     return clustering
 
 
@@ -111,9 +112,10 @@ def print_info_perf(list_trames, percent, dico_data, letter=True):
 
     for i in range(1, 27):
         sub_list = list_trames[start:start + int(len(dico_data["pics_" + name][0]) * percent)]
+        print("Index: ", start)
         print("Letter " + name + " success percentage: ", sub_list.count(max(sub_list, key=sub_list.count)) / len(sub_list), " Cluster: ", max(sub_list, key=sub_list.count))
         name = chr(ord(name) + 1)
-        start = len(sub_list)
+        start += len(sub_list)
 
 
 # Run the clustering program and save the result in a csv
@@ -147,12 +149,18 @@ def read_csv(name):
 
 if __name__ == "__main__":
     percent = 0.2
+    mean = False
+    run_clustering(percent)
     dico_trames = get_all_bin("../data/")
     all_trames = read_csv('statictrames-0_2.csv')
-    # print_info_perf(all_trames, percent, dico_trames)
-    mean_list, LOGMDP = mean_clustering.mean_clustering(dico_trames)
-    mean_clustering.test_mean_clustering(mean_list, dico_trames["pics_M"][0])
-    mean_clustering.print_info_perf_mean(mean_list, dico_trames)
+
+    print_info_perf(all_trames, percent, dico_trames)
+    # analysis_list, LOGMDP = mean_clustering.mean_clustering(dico_trames, mean)
+    # if mean:
+    #     mean_clustering.test_mean_clustering(analysis_list, dico_trames["pics_M"][0])
+    #     mean_clustering.print_info_perf_mean(analysis_list, dico_trames)
+    # else:
+    #     mean_clustering.test_gaussian_kernel_clustering(analysis_list, dico_trames["pics_M"][0])
 
     """pics_nokey, info = get_pics_from_file("../data/pics_NOKEY.bin")
     pics_pad0, info = get_pics_from_file("../data/pics_0.bin")
