@@ -59,6 +59,9 @@ def get_pics_from_file(filename):
     return tab_pics, info
 
 
+# return the data from the binary files
+# IN: path: str, percent: float
+# OUT: return dico{filenames(str): [trames, metadata]}
 def get_all_bin(path):
     all_files = [f for f in os.listdir(path) if isfile(join(path, f))]
 
@@ -72,6 +75,9 @@ def get_all_bin(path):
     return dico_files_content
 
 
+# concatenate trames from all the letters
+# IN: path: str, percent: float
+# OUT: list(float)
 def get_letters_trames(path, percent):
     dico = get_all_bin(path)
     name = "A"
@@ -82,12 +88,18 @@ def get_letters_trames(path, percent):
     return trames
 
 
+# Run the clustering algorithm and return the label for each trame
+# IN: listoflists(list(list(float)), number of cluster: int
+# OUT: list(int)
 def get_clusters(listoflists, number):
     listoflists = np.array(listoflists)
     clustering = AgglomerativeClustering(n_clusters=number).fit_predict(listoflists)
     return clustering
 
 
+# Print in terminal perf of clustering
+# IN: list_trames list(int), percent: float, dico_data:{name_bin_file(str): data from the bin file}, letter: bool
+# OUT: None
 def print_info_perf(list_trames, percent, dico_data, letter=True):
     if not letter:
         return
@@ -102,11 +114,14 @@ def print_info_perf(list_trames, percent, dico_data, letter=True):
         start = len(sub_list)
 
 
-def run_clustering():
+# Run the clustering program and save the result in a csv
+# IN: percent of the trames used: float
+# OUT: None
+def run_clustering(percent):
     file = open("statictrames-0_2.csv", 'w')
     write = csv.writer(file)
 
-    trames = get_letters_trames("../data/", 0.2)
+    trames = get_letters_trames("../data/", percent)
     start = time.perf_counter()
     clusters = list(get_clusters(trames, 26))
     print(clusters)
@@ -117,6 +132,9 @@ def run_clustering():
     file.close()
 
 
+# return list of int from the csv
+# IN: name of the csv: str
+# OUT: list(int)
 def read_csv(name):
     with open(name, newline='') as f:
         reader = csv.reader(f)
@@ -128,7 +146,6 @@ def read_csv(name):
 if __name__ == "__main__":
     percent = 0.2
     dico_trames = get_all_bin("../data/")
-    # print(dico_trames.key())
     all_trames = read_csv('statictrames-0_2.csv')
     print_info_perf(all_trames, percent, dico_trames)
     """pics_nokey, info = get_pics_from_file("../data/pics_NOKEY.bin")
