@@ -1,6 +1,9 @@
 import numpy as np
 
 
+# Algorithm which calculate the mean of all trames for a letter
+# IN: dico_data: {filename: (trames, metadata)}
+# OUT: list of means list(float), dico of LOGINMPD
 def mean_clustering(dico_data):
     LOGMDP = dico_data["pics_LOGINMDP"][0]
     dico_data.pop("pics_LOGINMDP")
@@ -24,6 +27,9 @@ def mean_clustering(dico_data):
     return mean_trames_list, LOGMDP
 
 
+# Find the mean_trame which has the best correspondance with the list of test trames
+# IN: mean_trames_list: list(list(float)), test_trames: list(list(float))
+# OUT: percentage: float, cluster: int
 def test_mean_clustering(mean_trames_list, test_trames):
     res_trames = []
 
@@ -34,9 +40,10 @@ def test_mean_clustering(mean_trames_list, test_trames):
     return res_trames.count(max(res_trames, key=res_trames.count)) / len(res_trames), max(res_trames, key=res_trames.count)
 
 
-def print_info_perf_mean(mean_trames_list, dico_data, letter=True):
-    if not letter:
-        return
+# show perf of mean clustering for each file
+# IN: mean_trames_list: list(list(float)), dico_data: dico_binary_file
+# OUT: None
+def print_info_perf_mean(mean_trames_list, dico_data):
 
     for key in dico_data:
         res = test_mean_clustering(mean_trames_list, dico_data[key][0])

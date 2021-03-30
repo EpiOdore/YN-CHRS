@@ -149,10 +149,10 @@ if __name__ == "__main__":
     percent = 0.2
     dico_trames = get_all_bin("../data/")
     all_trames = read_csv('statictrames-0_2.csv')
-    print_info_perf(all_trames, percent, dico_trames)
-    # mean_list, LOGMDP = mean_clustering.mean_clustering(dico_trames)
-    # mean_clustering.test_mean_clustering(mean_list, dico_trames["pics_M"][0])
-    # mean_clustering.print_info_perf_mean(mean_list, dico_trames)
+    # print_info_perf(all_trames, percent, dico_trames)
+    mean_list, LOGMDP = mean_clustering.mean_clustering(dico_trames)
+    mean_clustering.test_mean_clustering(mean_list, dico_trames["pics_M"][0])
+    mean_clustering.print_info_perf_mean(mean_list, dico_trames)
 
     """pics_nokey, info = get_pics_from_file("../data/pics_NOKEY.bin")
     pics_pad0, info = get_pics_from_file("../data/pics_0.bin")
