@@ -95,8 +95,8 @@ def get_letters_trames(path, percent):
 # OUT: list(int)
 def get_clusters(listoflists, number):
     listoflists = np.array(listoflists)
-    # clustering = AgglomerativeClustering(n_clusters=number).fit_predict(listoflists)
-    clustering = KMeans(n_clusters=number).fit_predict(listoflists)
+    clustering = AgglomerativeClustering(n_clusters=number).fit_predict(listoflists)
+    # clustering = KMeans(n_clusters=number).fit_predict(listoflists)
     return clustering
 
 
@@ -110,13 +110,25 @@ def print_info_perf(list_trames, percent, dico_data, letter=True):
     name = "A"
     start = 0
 
+    master_ratio = []
+    clusters_detected = []
+
     for i in range(1, 27):
         sub_list = list_trames[start:start + int(len(dico_data["pics_" + name][0]) * percent)]
-        print("Index: ", start)
-        print("Letter " + name + " success percentage: ", sub_list.count(max(sub_list, key=sub_list.count)) / len(sub_list), " Cluster: ", max(sub_list, key=sub_list.count))
+        ratio = sub_list.count(max(sub_list, key=sub_list.count)) / len(sub_list)
+        cluster = max(sub_list, key=sub_list.count)
+        print("Letter " + name + " success percentage: ", ratio, " Cluster: ", cluster)
         name = chr(ord(name) + 1)
         start += len(sub_list)
 
+        if cluster in clusters_detected:
+            ratio = 1 - ratio
+        else:
+            clusters_detected.append(cluster)
+
+        master_ratio.append(ratio)
+
+    print("Master ratio: ", sum(master_ratio) / len(master_ratio))
 
 # Run the clustering program and save the result in a csv
 # IN: percent of the trames used: float
@@ -150,7 +162,7 @@ def read_csv(name):
 if __name__ == "__main__":
     percent = 0.2
     mean = False
-    run_clustering(percent)
+    # run_clustering(percent)
     dico_trames = get_all_bin("../data/")
     all_trames = read_csv('statictrames-0_2.csv')
 
