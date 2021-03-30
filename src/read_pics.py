@@ -81,16 +81,32 @@ def get_letters_trames(path, percent):
         name = chr(ord(name) + 1)
     return trames
 
+
 def get_clusters(listoflists, number):
     listoflists = np.array(listoflists)
     clustering = AgglomerativeClustering(n_clusters=number).fit_predict(listoflists)
     return clustering
 
-if __name__ == "__main__":
+
+def print_info_perf(list_trames, percent, dico_data, letter=True):
+    if not letter:
+        return
+
+    name = "A"
+    start = 0
+
+    for i in range(1, 27):
+        sub_list = list_trames[start:start + int(len(dico_data["pics_" + name][0]) * percent)]
+        print("Letter " + name + " success percentage: ", sub_list.count(max(sub_list, key=sub_list.count)) / len(sub_list))
+        name = chr(ord(name) + 1)
+        start = len(sub_list)
+
+
+def run_clustering():
     file = open("statictrames-0_2.csv", 'w')
     write = csv.writer(file)
 
-    trames = get_letters_trames("../data/", 0.3)
+    trames = get_letters_trames("../data/", 0.2)
     start = time.perf_counter()
     clusters = list(get_clusters(trames, 26))
     print(clusters)
@@ -99,6 +115,22 @@ if __name__ == "__main__":
     print("running time: ", end - start)
     write.writerow(clusters)
     file.close()
+
+
+def read_csv(name):
+    with open(name, newline='') as f:
+        reader = csv.reader(f)
+        data = list(reader)
+
+    return [int(i) for i in data[0]]
+
+
+if __name__ == "__main__":
+    percent = 0.2
+    dico_trames = get_all_bin("../data/")
+    # print(dico_trames.key())
+    all_trames = read_csv('statictrames-0_2.csv')
+    print_info_perf(all_trames, percent, dico_trames)
     """pics_nokey, info = get_pics_from_file("../data/pics_NOKEY.bin")
     pics_pad0, info = get_pics_from_file("../data/pics_0.bin")
 
