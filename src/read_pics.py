@@ -3,6 +3,7 @@ Script python pour ouvrir les fichiers de traces de clavier
 
 """
 import mean_clustering
+import neural_network
 import os
 from os.path import isfile, join
 from sklearn.cluster import AgglomerativeClustering, KMeans
@@ -165,17 +166,21 @@ if __name__ == "__main__":
     # run_clustering(percent)
     dico_trames = get_all_bin("../data/")
     all_trames = read_csv('statictrames-0_2.csv')
-
+    dico_trames.pop("pics_LOGINMDP")
     # print_info_perf(all_trames, percent, dico_trames)
-    analysis_list, LOGMDP = mean_clustering.mean_clustering(dico_trames, percent, mean)
-    if mean:
-        mean_clustering.test_mean_clustering(analysis_list, dico_trames["pics_M"][0])
-        mean_clustering.print_info_perf_mean(analysis_list, dico_trames)
-    else:
-        # print(dico_trames["pics_M"][0])
-        mean_clustering.print_info_perfo_gauss(analysis_list, dico_trames)
+    # analysis_list, LOGMDP = mean_clustering.mean_clustering(dico_trames, percent, mean)
+
+    neural_network.neural_network(dico_trames, percent)
+    # if mean:
+    #     mean_clustering.test_mean_clustering(analysis_list, dico_trames["pics_M"][0])
+    #     mean_clustering.print_info_perf_mean(analysis_list, dico_trames)
+    # else:
+    #     print(dico_trames["pics_M"][0])
+        # mean_clustering.print_info_perfo_gauss(analysis_list, dico_trames)
         # mean_clustering.test_gaussian_kernel_clustering(analysis_list, LOGMDP, "pics_G")
         # mean_clustering.test_gaussian_kernel_clustering(analysis_list, dico_trames["pics_G"][0], "pics_G")
+
+
 
     """pics_nokey, info = get_pics_from_file("../data/pics_NOKEY.bin")
     pics_pad0, info = get_pics_from_file("../data/pics_0.bin")
