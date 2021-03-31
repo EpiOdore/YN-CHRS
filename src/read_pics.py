@@ -173,8 +173,9 @@ if __name__ == "__main__":
         mean_clustering.print_info_perf_mean(analysis_list, dico_trames)
     else:
         # print(dico_trames["pics_M"][0])
-        # mean_clustering.print_info_perfo_gauss(analysis_list, dico_trames)
-        mean_clustering.test_gaussian_kernel_clustering(analysis_list, dico_trames["pics_G"][0], "pics_G")
+        mean_clustering.print_info_perfo_gauss(analysis_list, dico_trames)
+        # mean_clustering.test_gaussian_kernel_clustering(analysis_list, LOGMDP, "pics_G")
+        # mean_clustering.test_gaussian_kernel_clustering(analysis_list, dico_trames["pics_G"][0], "pics_G")
 
     """pics_nokey, info = get_pics_from_file("../data/pics_NOKEY.bin")
     pics_pad0, info = get_pics_from_file("../data/pics_0.bin")

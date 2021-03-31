@@ -69,11 +69,10 @@ def test_gaussian_kernel_clustering(gaussian_dico, test_trames, filename):
             score_dico[key] = np.exp(gaussian_dico[key].score([trame]))
 
         detected_value = max(score_dico, key=score_dico.get)
-        if detected_value == filename:
-            score += 1
+        score += int(detected_value == filename)
+        # print(detected_value)
         # test_dico[key] = gaussian_dico[key].score_samples(test_trames)
-    print(score / len(test))
-    return
+    return score / len(test)
 
     minus = min(test_dico, key=test_dico.get)
 
@@ -86,10 +85,13 @@ def print_info_perfo_gauss(gaussian_dico, trames_dico):
 
     success = 0
 
+    trames_dico.pop("pics_NOKEY")
+    gaussian_dico.pop   ("pics_NOKEY")
+
     for filename, data in trames_dico.items():
-        minus, filename_detected = test_gaussian_kernel_clustering(gaussian_dico, data[0])
-        print("File tested: " + filename + " File detected: " + filename_detected)
-        success += int(filename == filename_detected)
+        ratio = test_gaussian_kernel_clustering(gaussian_dico, data[0], filename)
+        print("File tested: " + filename + " ratio: ", ratio)
+        success += ratio
 
     print("Master ratio: ", success / len(trames_dico))
 
