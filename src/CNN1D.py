@@ -85,3 +85,4 @@ def neural_network_1D(dico_trames, percent):
 
     print("Accuracy on train trames: ", train_accuracy)
     print("Accuracy on test trames: ", test_accuracy)
+    return model
