@@ -170,8 +170,8 @@ if __name__ == "__main__":
     # print_info_perf(all_trames, percent, dico_trames)
     # analysis_list, LOGMDP = mean_clustering.mean_clustering(dico_trames, percent, mean)
 
-    neural_network.neural_network(dico_trames, percent)
-    # neural_network.convolute_neural_network(dico_trames, percent)
+    # neural_network.neural_network(dico_trames, percent)
+    neural_network.convolute_neural_network(dico_trames, percent)
     # if mean:
     #     mean_clustering.test_mean_clustering(analysis_list, dico_trames["pics_M"][0])
     #     mean_clustering.print_info_perf_mean(analysis_list, dico_trames)

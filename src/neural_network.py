@@ -61,10 +61,11 @@ def packed_trames(trames, nb_pack):
     for i in range(0, end_selected_trames, nb_pack):
         if i == 0:
             continue
-        packs += [trames[start:i]]
+        pack = [trames[start:i]]
+        packs.append(np.array(pack))
         start = i
     # packs = np.array(packs)
-    print("test")
+    # print("test")
     return packs
 
 
@@ -86,7 +87,7 @@ def trunc_packed_dataset(dico_trames, percent, nb_pack):
         if cluster == float(10):
             break
         trames = values[0]
-        print(len(trames[0: int(len(trames) * percent)]))
+        # print(len(trames[0: int(len(trames) * percent)]))
         packs_train = packed_trames(trames[0: int(len(trames) * percent)], nb_pack)
         packs_test = packed_trames(trames[int(len(trames) * (1 - percent)):], nb_pack)
         train_trames += packs_train
@@ -100,7 +101,7 @@ def trunc_packed_dataset(dico_trames, percent, nb_pack):
 
     # train_trames = [np.array(i) for i in train_trames]
     # test_trames = [np.array(i) for i in test_trames]
-    print("tes")
+    # print("tes")
 
     return np.array(train_trames), np.array(train_results), np.array(test_trames), np.array(test_results), dico_corresp_cluster_file
 
@@ -152,10 +153,9 @@ def convolute_neural_network(dico_trames, percent):
 
     model.compile(loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), optimizer='adam', metrics=['accuracy'])
 
-    model.fit(truncated_dataset[0], truncated_dataset[1], epochs=100)
+    model.fit(truncated_dataset[0], truncated_dataset[1], epochs=100, validation_data=(truncated_dataset[2], truncated_dataset[3]))
 
-    _, train_accuracy = model.evaluate(truncated_dataset[0], truncated_dataset[1])
-    _, test_accuracy = model.evaluate(truncated_dataset[2], truncated_dataset[3])
+    _, train_accuracy = model.evaluate(truncated_dataset[0], truncated_dataset[1], )
 
     print("Accuracy on train trames: ", train_accuracy)
     print("Accuracy on test trames: ", test_accuracy)
