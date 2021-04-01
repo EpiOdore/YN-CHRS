@@ -61,7 +61,10 @@ def packed_trames(trames, nb_pack):
     for i in range(0, end_selected_trames, nb_pack):
         if i == 0:
             continue
-        pack = [trames[start:i]]
+        pack = trames[start:i]
+        for trame in pack:
+            for j in range(len(trame)):
+                trame[j] = np.array(trame[j])
         packs.append(np.array(pack))
         start = i
     # packs = np.array(packs)
@@ -139,7 +142,7 @@ def convolute_neural_network(dico_trames, percent):
     print(truncated_dataset[0])
 
     model = tf.keras.Sequential([
-        tf.keras.layers.Conv2D(17, (17, 1), activation='relu', input_shape=(17, 17, 1))])
+        tf.keras.layers.Conv1D(17, 17, activation='relu', input_shape=(17, 17, 1))])
         # tf.keras.layers.MaxPooling2D((1, 1)),
         # tf.keras.layers.Conv2D(17 * 2, (17, 1), activation='relu'),
         # tf.keras.layers.MaxPooling2D((1, 1)),
@@ -158,5 +161,5 @@ def convolute_neural_network(dico_trames, percent):
     _, train_accuracy = model.evaluate(truncated_dataset[0], truncated_dataset[1], )
 
     print("Accuracy on train trames: ", train_accuracy)
-    print("Accuracy on test trames: ", test_accuracy)
+    # print("Accuracy on test trames: ", test_accuracy)
 
