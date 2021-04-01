@@ -3,7 +3,8 @@ Script python pour ouvrir les fichiers de traces de clavier
 
 """
 import mean_clustering
-import neural_network
+# import neural_network
+import CNN1D
 import os
 from os.path import isfile, join
 from sklearn.cluster import AgglomerativeClustering, KMeans
@@ -169,9 +170,10 @@ if __name__ == "__main__":
     dico_trames.pop("pics_LOGINMDP")
     # print_info_perf(all_trames, percent, dico_trames)
     # analysis_list, LOGMDP = mean_clustering.mean_clustering(dico_trames, percent, mean)
-
+    CNN1D.neural_network_1D(dico_trames, percent)
     # neural_network.neural_network(dico_trames, percent)
-    neural_network.convolute_neural_network(dico_trames, percent)
+    # neural_network.convolute_neural_network(dico_trames, percent)
+
     # if mean:
     #     mean_clustering.test_mean_clustering(analysis_list, dico_trames["pics_M"][0])
     #     mean_clustering.print_info_perf_mean(analysis_list, dico_trames)
