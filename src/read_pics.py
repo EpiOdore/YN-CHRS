@@ -172,10 +172,15 @@ if __name__ == "__main__":
     # analysis_list, LOGMDP = mean_clustering.mean_clustering(dico_trames, percent, mean)
     network = CNN1D.neural_network_1D(dico_trames, percent)
     sample = np.array([dico_trames["pics_A"][0][0], dico_trames["pics_A"][0][1], dico_trames["pics_A"][0][2]])
+    sample = np.reshape(sample, (17, 3))
     print(sample)
-    np.reshape(sample, (3, 17))
-    test = network.predict(sample)
-    print(test)
+    test = network.predict(np.array([sample]))
+    output = test[0]
+    maxval = max(output)
+    maxpos = np.where(output == maxval)[0][0]
+    print("output: ", output)
+    print("valeur max: ", maxval)
+    print("pos du max: ", maxpos)
     # neural_network.neural_network(dico_trames, percent)
     # neural_network.convolute_neural_network(dico_trames, percent)
 
