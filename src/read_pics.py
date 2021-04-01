@@ -171,8 +171,8 @@ if __name__ == "__main__":
     # print_info_perf(all_trames, percent, dico_trames)
     # analysis_list, LOGMDP = mean_clustering.mean_clustering(dico_trames, percent, mean)
     network = CNN1D.neural_network_1D(dico_trames, percent)
-    sample = np.array([dico_trames["pics_A"][0][0], dico_trames["pics_A"][0][1], dico_trames["pics_A"][0][2]])
-    sample = np.reshape(sample, (17, 3))
+    sample = np.array([dico_trames["pics_A"][0][0], dico_trames["pics_A"][0][1], dico_trames["pics_A"][0][2], dico_trames["pics_A"][0][3]])
+    sample = np.reshape(sample, (4, 17))
     print(sample)
     test = network.predict(np.array([sample]))
     output = test[0]
