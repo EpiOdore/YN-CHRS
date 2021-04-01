@@ -77,10 +77,11 @@ def neural_network_1D(dico_trames, percent):
 
     model.compile(loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), optimizer='adam', metrics=['accuracy'])
 
-    model.fit(truncated_dataset[0], truncated_dataset[1], epochs=50, validation_data=(truncated_dataset[2], truncated_dataset[3]))
+    model.fit(truncated_dataset[0], truncated_dataset[1], epochs=2, validation_data=(truncated_dataset[2], truncated_dataset[3]))
 
     _, train_accuracy = model.evaluate(truncated_dataset[0], truncated_dataset[1])
     _, test_accuracy = model.evaluate(truncated_dataset[2], truncated_dataset[3])
 
     print("Accuracy on train trames: ", train_accuracy)
     print("Accuracy on test trames: ", test_accuracy)
+    return model

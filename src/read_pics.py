@@ -170,7 +170,12 @@ if __name__ == "__main__":
     dico_trames.pop("pics_LOGINMDP")
     # print_info_perf(all_trames, percent, dico_trames)
     # analysis_list, LOGMDP = mean_clustering.mean_clustering(dico_trames, percent, mean)
-    CNN1D.neural_network_1D(dico_trames, percent)
+    network = CNN1D.neural_network_1D(dico_trames, percent)
+    sample = np.array([dico_trames["pics_A"][0][0], dico_trames["pics_A"][0][1], dico_trames["pics_A"][0][2]])
+    print(sample)
+    np.reshape(sample, (3, 17))
+    test = network.predict(sample)
+    print(test)
     # neural_network.neural_network(dico_trames, percent)
     # neural_network.convolute_neural_network(dico_trames, percent)
 
