@@ -186,8 +186,8 @@ if __name__ == "__main__":
         foundcarac = dicoequivalences[maxpos]
         print("caractère trouvé: ", foundcarac)
         letter = foundcarac.split("_")
-        if letter[1] == "NOKEY":
-            continue
+        if letter[1] != "NOKEY":
+            finalstring += letter[1]
         if i % 10 == 0:
             finalstring += '\n'
         else:
