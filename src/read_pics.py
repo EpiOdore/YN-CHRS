@@ -173,7 +173,7 @@ if __name__ == "__main__":
     print(len(loginmdp[0]))
     (network, dicoequivalences) = CNN1D.neural_network_1D(dico_trames, percent)
     finalstring = ''
-    for i in range(len(loginmdp[0]) - 3):
+    for i in range(len(loginmdp[0]) - 4):
         sample = np.array([loginmdp[0][i], loginmdp[0][i + 1], loginmdp[0][i + 2], loginmdp[0][i + 3]])
         # print(sample)
         test = network.predict(np.array([sample]))
@@ -186,8 +186,9 @@ if __name__ == "__main__":
         foundcarac = dicoequivalences[maxpos]
         print("caractère trouvé: ", foundcarac)
         letter = foundcarac.split("_")
-        finalstring += letter[1]
-        if (i % 10 == 0):
+        if letter[1] == "NOKEY":
+            continue
+        if i % 10 == 0:
             finalstring += '\n'
         else:
             finalstring += ' '
