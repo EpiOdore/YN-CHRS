@@ -37,8 +37,6 @@ def trunc_dataset_1D(dico_trames, percent, nb_pack):
     dico_corresp_cluster_file = {}
     cluster = float(0)
     for key, values in dico_trames.items():
-        if cluster == float(10):
-            break
         trames = values[0]
         train_pack = pack_trames(trames[0: int(len(trames) * percent)], nb_pack)
         test_pack = pack_trames(trames[int(len(trames) * (1 - percent)):], nb_pack)
