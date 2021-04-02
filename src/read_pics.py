@@ -13,12 +13,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import time
 import csv
-<<<<<<< HEAD
 import tensorflow as tf
 
-=======
-import re
->>>>>>> 7895c32df28c8ea60294c2001ddca5b2e863d642
 
 def read_int(f):
     ba = bytearray(4)
@@ -234,7 +230,8 @@ if __name__ == "__main__":
 
     network = list_models[0]
     outputString = run_CNN1D(network, CNN1D.trunc_dataset_1D(dico_trames, percent, nb_pack)[4], loginmdp[0])
-    save_output(outputString, "outputV2.txt")
+    # print(outputString)
+    # save_output(outputString, "outputV2.txt")
 
     # neural_network.neural_network(dico_trames, percent)
 
