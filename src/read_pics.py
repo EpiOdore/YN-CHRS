@@ -132,6 +132,7 @@ def print_info_perf(list_trames, percent, dico_data, letter=True):
 
     print("Master ratio: ", sum(master_ratio) / len(master_ratio))
 
+
 # Run the clustering program and save the result in a csv
 # IN: percent of the trames used: float
 # OUT: None
