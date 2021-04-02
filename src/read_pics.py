@@ -193,6 +193,9 @@ if __name__ == "__main__":
         else:
             finalstring += ' '
     print("final string: ", finalstring)
+    file = open("outputV1.txt", "w")
+    file.write(finalstring)
+    file.close()
     # neural_network.neural_network(dico_trames, percent)
     # neural_network.convolute_neural_network(dico_trames, percent)
 
