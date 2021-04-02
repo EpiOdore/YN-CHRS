@@ -172,9 +172,8 @@ if __name__ == "__main__":
     # analysis_list, LOGMDP = mean_clustering.mean_clustering(dico_trames, percent, mean)
     (network, dicoequivalences) = CNN1D.neural_network_1D(dico_trames, percent)
 
-    for i in range(len(dico_trames["pics_A"][0]) - 2):
-        sample = np.array([dico_trames["pics_A"][0][i], dico_trames["pics_A"][0][i + 1], dico_trames["pics_A"][0][i + 2]])
-        sample = np.reshape(sample, (17, 3))
+    for i in range(0, len(dico_trames["pics_A"][0]), 3):
+        sample = np.array([dico_trames["pics_A"][0][i], dico_trames["pics_A"][0][i + 1], dico_trames["pics_A"][0][i + 2], dico_trames["pics_A"][0][i + 3]])
         # print(sample)
         test = network.predict(np.array([sample]))
         output = test[0]
