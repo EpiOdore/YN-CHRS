@@ -52,13 +52,7 @@ def trunc_dataset_1D(dico_trames, percent, nb_pack):
     return np.array(train_trames), np.array(train_results), np.array(test_trames), np.array(test_results), dico_corresp_cluster_file
 
 
-def neural_network_1D(dico_trames, percent):
-    # print(len(dico_trames))
-    nb_pack = 4
-    truncated_dataset = trunc_dataset_1D(dico_trames, percent, nb_pack)
-
-    print(truncated_dataset[0].shape)
-
+def create_model(nb_pack):
     model = tf.keras.Sequential()
     # model_m.add(Reshape((TIME_PERIODS, num_sensors), input_shape=(input_shape,)))
     model.add(tf.keras.layers.Conv1D(17 * nb_pack, 2, activation='relu', input_shape=(nb_pack, 17)))
@@ -75,13 +69,29 @@ def neural_network_1D(dico_trames, percent):
     model.add(tf.keras.layers.Dense(42, activation='sigmoid'))
     # model.add(tf.keras.layers.Dense(42, activation='relu')) #-> Peut etre superflu
     model.add(tf.keras.layers.Dense(42, activation='softmax'))
-    print(model.summary())
+    # print(model.summary())
 
+    # model_callback = tf.keras.callbacks.ModelCheckpoint(filepath="./model_weight-" + str(nb_model),
+    #                                              save_weights_only=True,
+    #                                              verbose=1)
     # print(truncated_dataset[0][0])
 
-    model.compile(loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), optimizer='adam', metrics=['accuracy'])
+    model.compile(loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), optimizer='adam',
+                  metrics=['accuracy'])
+
+    return model
+
+
+def neural_network_1D(dico_trames, percent, nb_model, nb_pack):
+    truncated_dataset = trunc_dataset_1D(dico_trames, percent, nb_pack)
+
+    print(truncated_dataset[0].shape)
+
+    model = create_model(nb_pack)
 
     model.fit(truncated_dataset[0], truncated_dataset[1], epochs=100, validation_data=(truncated_dataset[2], truncated_dataset[3]))
+
+    model.save("./model_weight-" + str(nb_model))
 
     _, train_accuracy = model.evaluate(truncated_dataset[0], truncated_dataset[1])
     _, test_accuracy = model.evaluate(truncated_dataset[2], truncated_dataset[3])
