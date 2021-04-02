@@ -170,10 +170,11 @@ if __name__ == "__main__":
     loginmdp = dico_trames.pop("pics_LOGINMDP")
     # print_info_perf(all_trames, percent, dico_trames)
     # analysis_list, LOGMDP = mean_clustering.mean_clustering(dico_trames, percent, mean)
+    print(len(loginmdp[0]))
     (network, dicoequivalences) = CNN1D.neural_network_1D(dico_trames, percent)
-
-    for i in range(0, len(dico_trames["pics_A"][0]), 3):
-        sample = np.array([dico_trames["pics_A"][0][i], dico_trames["pics_A"][0][i + 1], dico_trames["pics_A"][0][i + 2], dico_trames["pics_A"][0][i + 3]])
+    finalstring = ''
+    for i in range(len(loginmdp[0]) - 3):
+        sample = np.array([loginmdp[0][i], loginmdp[0][i + 1], loginmdp[0][i + 2], loginmdp[0][i + 3]])
         # print(sample)
         test = network.predict(np.array([sample]))
         output = test[0]
@@ -182,8 +183,15 @@ if __name__ == "__main__":
         # print("output: ", output)
         # print("valeur max: ", maxval)
         # print("pos du max: ", maxpos)
-        print("caractère trouvé: ", dicoequivalences[maxpos])
-        i += 2
+        foundcarac = dicoequivalences[maxpos]
+        print("caractère trouvé: ", foundcarac)
+        letter = foundcarac.split("_")
+        finalstring += letter[1]
+        if (i % 10 == 0):
+            finalstring += '\n'
+        else:
+            finalstring += ' '
+    print("final string: ", finalstring)
     # neural_network.neural_network(dico_trames, percent)
     # neural_network.convolute_neural_network(dico_trames, percent)
 
