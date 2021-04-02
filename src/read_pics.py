@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import time
 import csv
-
+import re
 
 def read_int(f):
     ba = bytearray(4)
@@ -168,23 +168,41 @@ def save_output(resultstring, filename):
 
 
 def run_CNN1D(network, dicoequivalences, inputlist):
-    finalstring = ''
-    for i in range(len(inputlist) - 3):
+    finalString = ''
+    finalList = []
+    for i in range(int(len(inputlist)/100)):
         sample = np.array([inputlist[i], inputlist[i + 1], inputlist[i + 2], inputlist[i + 3]])
         test = network.predict(np.array([sample]))
         output = test[0]
         maxval = max(output)
         maxpos = np.where(output == maxval)[0][0]
         foundcarac = dicoequivalences[maxpos]
+        finalList.append(foundcarac)
         letter = foundcarac.split("_")
         if letter[1] != "NOKEY":
-            finalstring += letter[1]
+            finalString += letter[1]
         if i % 10 == 0:
-            finalstring += '\n'
+            finalString += '\n'
         else:
-            finalstring += ' '
-    print("final string: ", finalstring)
-    return finalstring
+            finalString += ' '
+    return finalString, finalList
+
+
+def run_on_all_char(dico_trames, network, dicoequivalences):
+    keyList = dico_trames.keys()
+    allWeightsDico = {}
+    for key, value in dico_trames.items() :
+        weightList = []
+        outputString, outputList = run_CNN1D(network, dicoequivalences, value[0])
+        for key2 in keyList:
+            keyCount = outputList.count(key2)
+            if keyCount != 0:
+                weightList.append([key2, keyCount])
+        for i in range(len(weightList)):
+            weightList[i][1] = weightList[i][1] / len(outputList)
+        allWeightsDico[key] = weightList
+        break
+    return allWeightsDico
 
 
 if __name__ == "__main__":
@@ -197,8 +215,10 @@ if __name__ == "__main__":
     # print_info_perf(all_trames, percent, dico_trames)
     # analysis_list, LOGMDP = mean_clustering.mean_clustering(dico_trames, percent, mean)
     (network, dicoequivalences) = CNN1D.neural_network_1D(dico_trames, percent)
-    outputString = run_CNN1D(network, dicoequivalences, loginmdp[0])
-    save_output(outputString, "outputV2.txt")
+    # outputString = run_CNN1D(network, dicoequivalences, loginmdp[0])
+    allWeightsDico = run_on_all_char(dico_trames, network, dicoequivalences)
+    print(allWeightsDico)
+    # save_output(outputString, "outputV2.txt")
 
     # neural_network.neural_network(dico_trames, percent)
 
