@@ -167,20 +167,24 @@ if __name__ == "__main__":
     # run_clustering(percent)
     dico_trames = get_all_bin("../data/")
     all_trames = read_csv('statictrames-0_2.csv')
-    dico_trames.pop("pics_LOGINMDP")
+    loginmdp = dico_trames.pop("pics_LOGINMDP")
     # print_info_perf(all_trames, percent, dico_trames)
     # analysis_list, LOGMDP = mean_clustering.mean_clustering(dico_trames, percent, mean)
-    network = CNN1D.neural_network_1D(dico_trames, percent)
-    sample = np.array([dico_trames["pics_A"][0][0], dico_trames["pics_A"][0][1], dico_trames["pics_A"][0][2]])
-    sample = np.reshape(sample, (17, 3))
-    print(sample)
-    test = network.predict(np.array([sample]))
-    output = test[0]
-    maxval = max(output)
-    maxpos = np.where(output == maxval)[0][0]
-    print("output: ", output)
-    print("valeur max: ", maxval)
-    print("pos du max: ", maxpos)
+    (network, dicoequivalences) = CNN1D.neural_network_1D(dico_trames, percent)
+
+    for i in range(len(dico_trames["pics_A"][0]) - 2):
+        sample = np.array([dico_trames["pics_A"][0][i], dico_trames["pics_A"][0][i + 1], dico_trames["pics_A"][0][i + 2]])
+        sample = np.reshape(sample, (17, 3))
+        # print(sample)
+        test = network.predict(np.array([sample]))
+        output = test[0]
+        maxval = max(output)
+        maxpos = np.where(output == maxval)[0][0]
+        # print("output: ", output)
+        # print("valeur max: ", maxval)
+        # print("pos du max: ", maxpos)
+        print("caractère trouvé: ", dicoequivalences[maxpos])
+        i += 2
     # neural_network.neural_network(dico_trames, percent)
     # neural_network.convolute_neural_network(dico_trames, percent)
 
