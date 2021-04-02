@@ -51,25 +51,26 @@ def trunc_dataset_1D(dico_trames, percent, nb_pack):
         dico_corresp_cluster_file[cluster] = key
         cluster += 1
 
-    return np.array(train_trames).reshape(len(train_trames), 17, 3), np.array(train_results), np.array(test_trames).reshape(len(test_trames), 17, 3), np.array(test_results), dico_corresp_cluster_file
+    return np.array(train_trames), np.array(train_results), np.array(test_trames), np.array(test_results), dico_corresp_cluster_file
 
 
 def neural_network_1D(dico_trames, percent):
     # print(len(dico_trames))
-    nb_pack = 3
+    nb_pack = 4
     truncated_dataset = trunc_dataset_1D(dico_trames, percent, nb_pack)
 
     print(truncated_dataset[0].shape)
 
     model = tf.keras.Sequential()
     # model_m.add(Reshape((TIME_PERIODS, num_sensors), input_shape=(input_shape,)))
-    model.add(tf.keras.layers.Conv1D(64, 3, activation='relu', input_shape=(17, nb_pack)))
-    model.add(tf.keras.layers.Conv1D(64, 3, activation='relu'))
+    model.add(tf.keras.layers.Conv1D(50, 2, activation='relu', input_shape=(nb_pack, 17)))
+    model.add(tf.keras.layers.Conv1D(50, 2, activation='relu'))
     model.add(tf.keras.layers.MaxPooling1D(2))
-    model.add(tf.keras.layers.Conv1D(101, 3, activation='relu'))
-    model.add(tf.keras.layers.Conv1D(101, 3, activation='relu'))
+    model.add(tf.keras.layers.Conv1D(80, 1, activation='relu'))
+    model.add(tf.keras.layers.Conv1D(80, 1, activation='relu'))
     model.add(tf.keras.layers.GlobalAveragePooling1D())
     model.add(tf.keras.layers.Dropout(0.5))
+    # model.add(tf.keras.layers.Dense(42, activation='relu')) #-> Peut etre superflu
     model.add(tf.keras.layers.Dense(42, activation='softmax'))
     print(model.summary())
 
@@ -77,7 +78,7 @@ def neural_network_1D(dico_trames, percent):
 
     model.compile(loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), optimizer='adam', metrics=['accuracy'])
 
-    model.fit(truncated_dataset[0], truncated_dataset[1], epochs=175, validation_data=(truncated_dataset[2], truncated_dataset[3]))
+    model.fit(truncated_dataset[0], truncated_dataset[1], epochs=50, validation_data=(truncated_dataset[2], truncated_dataset[3]))
 
     _, train_accuracy = model.evaluate(truncated_dataset[0], truncated_dataset[1])
     _, test_accuracy = model.evaluate(truncated_dataset[2], truncated_dataset[3])
