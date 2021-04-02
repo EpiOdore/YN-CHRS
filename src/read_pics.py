@@ -132,6 +132,7 @@ def print_info_perf(list_trames, percent, dico_data, letter=True):
 
     print("Master ratio: ", sum(master_ratio) / len(master_ratio))
 
+
 # Run the clustering program and save the result in a csv
 # IN: percent of the trames used: float
 # OUT: None
@@ -161,6 +162,32 @@ def read_csv(name):
     return [int(i) for i in data[0]]
 
 
+def save_output(resultstring, filename):
+    file = open(filename, "w")
+    file.write(resultstring)
+    file.close()
+
+
+def run_CNN1D(network, dicoequivalences, inputlist):
+    finalstring = ''
+    for i in range(len(inputlist) - 3):
+        sample = np.array([inputlist[i], inputlist[i + 1], inputlist[i + 2], inputlist[i + 3]])
+        test = network.predict(np.array([sample]))
+        output = test[0]
+        maxval = max(output)
+        maxpos = np.where(output == maxval)[0][0]
+        foundcarac = dicoequivalences[maxpos]
+        letter = foundcarac.split("_")
+        if letter[1] != "NOKEY":
+            finalstring += letter[1]
+        if i % 10 == 0:
+            finalstring += '\n'
+        else:
+            finalstring += ' '
+    print("final string: ", finalstring)
+    return finalstring
+
+
 if __name__ == "__main__":
     percent = 0.8
     mean = False
@@ -170,31 +197,11 @@ if __name__ == "__main__":
     loginmdp = dico_trames.pop("pics_LOGINMDP")
     # print_info_perf(all_trames, percent, dico_trames)
     # analysis_list, LOGMDP = mean_clustering.mean_clustering(dico_trames, percent, mean)
-    print(len(loginmdp[0]))
     (network, dicoequivalences) = CNN1D.neural_network_1D(dico_trames, percent)
-    finalstring = ''
-    for i in range(len(loginmdp[0]) - 4):
-        sample = np.array([loginmdp[0][i], loginmdp[0][i + 1], loginmdp[0][i + 2], loginmdp[0][i + 3]])
-        # print(sample)
-        test = network.predict(np.array([sample]))
-        output = test[0]
-        maxval = max(output)
-        maxpos = np.where(output == maxval)[0][0]
-        # print("output: ", output)
-        # print("valeur max: ", maxval)
-        # print("pos du max: ", maxpos)
-        foundcarac = dicoequivalences[maxpos]
-        print("caractère trouvé: ", foundcarac)
-        letter = foundcarac.split("_")
-        if letter[1] != "NOKEY":
-            finalstring += letter[1]
-        if i % 10 == 0:
-            finalstring += '\n'
-        else:
-            finalstring += ' '
-    print("final string: ", finalstring)
+    outputString = run_CNN1D(network, dicoequivalences, loginmdp[0])
+    save_output(outputString, "outputV2.txt")
+
     # neural_network.neural_network(dico_trames, percent)
-    # neural_network.convolute_neural_network(dico_trames, percent)
 
     # if mean:
     #     mean_clustering.test_mean_clustering(analysis_list, dico_trames["pics_M"][0])
