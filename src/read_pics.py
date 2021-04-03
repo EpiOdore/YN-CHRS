@@ -175,7 +175,7 @@ def save_output(resultstring, filename):
 def run_CNN1D(network, dicoequivalences, inputlist):
     finalString = ''
     finalList = []
-    for i in range(len(inputlist) - 3):
+    for i in range(int(len(inputlist)/100)):
         sample = np.array([inputlist[i], inputlist[i + 1], inputlist[i + 2], inputlist[i + 3]])
         test = network.predict(np.array([sample]))
         output = test[0]
@@ -208,6 +208,17 @@ def run_on_all_char(dico_trames, network, dicoequivalences):
         allWeightsDico[key] = weightList
     return allWeightsDico
 
+
+def split_output_list(output_list):
+    list_of_pools = []
+    pool = []
+    for i in range(len(output_list) - 2):
+        if output_list[i] != "pics_NOKEY" and output_list[i + 1] != "pics_NOKEY" and output_list[i + 2] != "pics_NOKEY":
+            pool.append(output_list[i + 2])
+        else:
+            list_of_pools.append(pool)
+            pool = []
+    return list_of_pools
 
 if __name__ == "__main__":
     percent = 0.8
