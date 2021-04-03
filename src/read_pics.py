@@ -209,6 +209,19 @@ def run_on_all_char(dico_trames, network, dicoequivalences):
     return allWeightsDico
 
 
+def get_proportions_in_split(split_list, dico_trames):
+    keyList = dico_trames.keys()
+    result = []
+    for list in split_list:
+        list_proportions = []
+        for key in keyList:
+            keyCount = list.count(key)
+            if keyCount != 0:
+                list_proportions.append([key, keyCount / len(list)])
+        result.append(list_proportions)
+    return result
+
+
 def get_model_list(nb_models, nb_pack, train_percent, new_train=False):
     if new_train:
         return [CNN1D.neural_network_1D(dico_trames, train_percent, i, nb_pack)[0] for i in range(nb_models)]
