@@ -209,8 +209,21 @@ def run_on_all_char(dico_trames, network, dicoequivalences):
     return allWeightsDico
 
 
+def get_model_list(nb_models, nb_pack, train_percent, new_train=False):
+    if new_train:
+        return [CNN1D.neural_network_1D(dico_trames, train_percent, i, nb_pack)[0] for i in range(nb_models)]
+    else:
+        return [tf.keras.models.load_model("./model_weight-" + str(i)) for i in range(nb_models)]
+
+
+def feed_models(models_list, dico_trames, nb_pack, input):
+    for i in range(len(models_list)):
+        (outputString, output_list) = run_CNN1D(list_models[i], CNN1D.trunc_dataset_1D(dico_trames, train_percent, nb_pack)[4], input)
+        print(outputString)
+
+
 if __name__ == "__main__":
-    percent = 0.8
+    train_percent = 0.8
     mean = False
     new_train = False
     nb_models = 4
@@ -222,15 +235,8 @@ if __name__ == "__main__":
     # print_info_perf(all_trames, percent, dico_trames)
     # analysis_list, LOGMDP = mean_clustering.mean_clustering(dico_trames, percent, mean)
     # outputString = run_CNN1D(network, dicoequivalences, loginmdp[0])
-
-    if new_train:
-        list_models = [CNN1D.neural_network_1D(dico_trames, percent, i, nb_pack)[0] for i in range(nb_models)]
-    else:
-        list_models = [tf.keras.models.load_model("./model_weight-" + str(i)) for i in range(nb_models)]
-
-    for i in range(nb_models):
-        (outputString, output_list) = run_CNN1D(list_models[i], CNN1D.trunc_dataset_1D(dico_trames, percent, nb_pack)[4], loginmdp[0])
-        print(outputString)
+    list_models = get_model_list(nb_models, nb_pack, train_percent, new_train)
+    feed_models(list_models, dico_trames, nb_pack, loginmdp[0])
 
         # save_output(outputString, "outputV3-" + str(i) +".txt")
 
