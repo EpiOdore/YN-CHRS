@@ -232,6 +232,7 @@ if __name__ == "__main__":
     loginmdp = dico_trames.pop("pics_LOGINMDP")
     # print_info_perf(all_trames, percent, dico_trames)
     # analysis_list, LOGMDP = mean_clustering.mean_clustering(dico_trames, percent, mean)
+    # outputString = run_CNN1D(network, dicoequivalences, loginmdp[0])
 
     if new_train:
         list_models = [CNN1D.neural_network_1D(dico_trames, percent, i, nb_pack)[0] for i in range(nb_models)]
@@ -241,6 +242,7 @@ if __name__ == "__main__":
     for i in range(nb_models):
         (outputString, output_list) = run_CNN1D(list_models[i], CNN1D.trunc_dataset_1D(dico_trames, percent, nb_pack)[4], loginmdp[0])
         print(outputString)
+
         # save_output(outputString, "outputV3-" + str(i) +".txt")
 
     # neural_network.neural_network(dico_trames, percent)
