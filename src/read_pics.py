@@ -176,7 +176,7 @@ def save_output(resultstring, filename):
 def run_CNN1D(network, dicoequivalences, inputlist):
     finalString = ''
     finalList = []
-    for i in range(int(len(inputlist)/100)):
+    for i in range(len(inputlist) - 3):
         sample = np.array([inputlist[i], inputlist[i + 1], inputlist[i + 2], inputlist[i + 3]])
         test = network.predict(np.array([sample]))
         output = test[0]
@@ -210,6 +210,19 @@ def run_on_all_char(dico_trames, network, dicoequivalences):
     return allWeightsDico
 
 
+def get_proportions_in_split(split_list, dico_trames):
+    keyList = dico_trames.values()
+    result = []
+    for list in split_list:
+        list_proportions = []
+        for key in keyList:
+            keyCount = list.count(key)
+            if keyCount != 0:
+                list_proportions.append([key, keyCount / len(list)])
+        result.append(list_proportions)
+    return result
+
+
 def get_model_list(nb_models, nb_pack, train_percent, new_train=False):
     if new_train:
         return [CNN1D.neural_network_1D(dico_trames, train_percent, i, nb_pack)[0] for i in range(nb_models)]
@@ -217,10 +230,12 @@ def get_model_list(nb_models, nb_pack, train_percent, new_train=False):
         return [tf.keras.models.load_model("./model_weight-" + str(i)) for i in range(nb_models)]
 
 
-def feed_models(models_list, dico_trames, nb_pack, input):
+def use_models(models_list, dico_trames, nb_pack, input):
+    output = []
     for i in range(len(models_list)):
         (outputString, output_list) = run_CNN1D(list_models[i], CNN1D.trunc_dataset_1D(dico_trames, train_percent, nb_pack)[4], input)
-        print(outputString)
+        output.append((outputString, output_list))
+    return output
 
 
 def split_output_list(output_list):
@@ -230,8 +245,9 @@ def split_output_list(output_list):
         if output_list[i] != "pics_NOKEY" and output_list[i + 1] != "pics_NOKEY" and output_list[i + 2] != "pics_NOKEY":
             pool.append(output_list[i + 2])
         else:
-            list_of_pools.append(pool)
-            pool = []
+            if pool != []:
+                list_of_pools.append(pool)
+                pool = []
     return list_of_pools
 
 
@@ -250,7 +266,7 @@ if __name__ == "__main__":
     train_percent = 0.8
     mean = False
     new_train = False
-    nb_models = 4
+    nb_models = 1
     nb_pack = 4
     # run_clustering(percent)
     dico_trames = get_all_bin("../data/")
@@ -261,7 +277,9 @@ if __name__ == "__main__":
     # analysis_list, LOGMDP = mean_clustering.mean_clustering(dico_trames, percent, mean)
     # outputString = run_CNN1D(network, dicoequivalences, loginmdp[0])
     list_models = get_model_list(nb_models, nb_pack, train_percent, new_train)
-    # feed_models(list_models, dico_trames, nb_pack, loginmdp[0])
+    output = use_models(list_models, dico_trames, nb_pack, loginmdp[0])
+    split_output = split_output_list(output[0][1])
+    split_output_proportions = get_proportions_in_split(split_output, corresp_cluster_file_dico)
 
     frames_results_per_models = [run_on_all_char(dico_trames, model, corresp_cluster_file_dico) for model in list_models]
 
