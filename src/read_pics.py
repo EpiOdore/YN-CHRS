@@ -175,7 +175,7 @@ def save_output(resultstring, filename):
 def run_CNN1D(network, dicoequivalences, inputlist):
     finalString = ''
     finalList = []
-    for i in range(int(len(inputlist)/100)):
+    for i in range(len(inputlist) - 3):
         sample = np.array([inputlist[i], inputlist[i + 1], inputlist[i + 2], inputlist[i + 3]])
         test = network.predict(np.array([sample]))
         output = test[0]
@@ -206,7 +206,6 @@ def run_on_all_char(dico_trames, network, dicoequivalences):
         for i in range(len(weightList)):
             weightList[i][1] = weightList[i][1] / len(outputList)
         allWeightsDico[key] = weightList
-        break
     return allWeightsDico
 
 
@@ -230,7 +229,7 @@ if __name__ == "__main__":
         list_models = [tf.keras.models.load_model("./model_weight-" + str(i)) for i in range(nb_models)]
 
     for i in range(nb_models):
-        outputString = run_CNN1D(list_models[i], CNN1D.trunc_dataset_1D(dico_trames, percent, nb_pack)[4], loginmdp[0])
+        (outputString, output_list) = run_CNN1D(list_models[i], CNN1D.trunc_dataset_1D(dico_trames, percent, nb_pack)[4], loginmdp[0])
         print(outputString)
 
         # save_output(outputString, "outputV3-" + str(i) +".txt")

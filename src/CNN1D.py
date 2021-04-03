@@ -89,7 +89,7 @@ def neural_network_1D(dico_trames, percent, nb_model, nb_pack):
 
     model = create_model(nb_pack)
 
-    model.fit(truncated_dataset[0], truncated_dataset[1], epochs=100, validation_data=(truncated_dataset[2], truncated_dataset[3]))
+    model.fit(truncated_dataset[0], truncated_dataset[1], epochs=2, validation_data=(truncated_dataset[2], truncated_dataset[3]))
 
     model.save("./model_weight-" + str(nb_model))
 
