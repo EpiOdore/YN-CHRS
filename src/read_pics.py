@@ -237,6 +237,17 @@ def split_output_list(output_list):
     return list_of_pools
 
 
+def get_correspondance_cluster_file_dico(dico_trames):
+    correspondance_dico = {}
+    cluster_counter = float(0)
+
+    for key, values in dico_trames.items():
+        correspondance_dico[cluster_counter] = key
+        cluster_counter += 1
+
+    return correspondance_dico
+
+
 if __name__ == "__main__":
     train_percent = 0.8
     mean = False
@@ -247,6 +258,7 @@ if __name__ == "__main__":
     dico_trames = get_all_bin("../data/")
     all_trames = read_csv('statictrames-0_2.csv')
     loginmdp = dico_trames.pop("pics_LOGINMDP")
+    corresp_cluster_file_dico = get_correspondance_cluster_file_dico(dico_trames)
     # print_info_perf(all_trames, percent, dico_trames)
     # analysis_list, LOGMDP = mean_clustering.mean_clustering(dico_trames, percent, mean)
     # outputString = run_CNN1D(network, dicoequivalences, loginmdp[0])
