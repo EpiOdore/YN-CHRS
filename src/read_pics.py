@@ -13,19 +13,22 @@ import matplotlib.pyplot as plt
 import numpy as np
 import time
 import csv
-import re
+import tensorflow as tf
+
 
 def read_int(f):
     ba = bytearray(4)
     f.readinto(ba)
     prm = np.frombuffer(ba, dtype=np.int32)
     return prm[0]
-    
+
+
 def read_double(f):
     ba = bytearray(8)
     f.readinto(ba)
     prm = np.frombuffer(ba, dtype=np.double)
     return prm[0]
+
 
 def read_double_tab(f, n):
     ba = bytearray(8*n)
@@ -35,7 +38,8 @@ def read_double_tab(f, n):
     else:
         prm = np.frombuffer(ba, dtype=np.double)
         return prm
-    
+
+
 def get_pics_from_file(filename):
     # Lecture du fichier d'infos + pics detectes (post-processing KeyFinder)
     print("Ouverture du fichier de pics "+filename)
@@ -209,17 +213,26 @@ def run_on_all_char(dico_trames, network, dicoequivalences):
 if __name__ == "__main__":
     percent = 0.8
     mean = False
+    new_train = False
+    nb_models = 4
+    nb_pack = 4
     # run_clustering(percent)
     dico_trames = get_all_bin("../data/")
     all_trames = read_csv('statictrames-0_2.csv')
     loginmdp = dico_trames.pop("pics_LOGINMDP")
     # print_info_perf(all_trames, percent, dico_trames)
     # analysis_list, LOGMDP = mean_clustering.mean_clustering(dico_trames, percent, mean)
-    (network, dicoequivalences) = CNN1D.neural_network_1D(dico_trames, percent)
-    # outputString = run_CNN1D(network, dicoequivalences, loginmdp[0])
-    allWeightsDico = run_on_all_char(dico_trames, network, dicoequivalences)
-    print(allWeightsDico)
-    # save_output(outputString, "outputV2.txt")
+
+    if new_train:
+        list_models = [CNN1D.neural_network_1D(dico_trames, percent, i, nb_pack)[0] for i in range(nb_models)]
+    else:
+        list_models = [tf.keras.models.load_model("./model_weight-" + str(i)) for i in range(nb_models)]
+
+    output_list = []
+    for i in range(nb_models):
+        outputString = run_CNN1D(list_models[i], CNN1D.trunc_dataset_1D(dico_trames, percent, nb_pack)[4], loginmdp[0])
+        print(outputString)
+        # save_output(outputString, "outputV3-" + str(i) +".txt")
 
     # neural_network.neural_network(dico_trames, percent)
 
