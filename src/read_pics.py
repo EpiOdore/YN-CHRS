@@ -228,10 +228,11 @@ if __name__ == "__main__":
     else:
         list_models = [tf.keras.models.load_model("./model_weight-" + str(i)) for i in range(nb_models)]
 
-    network = list_models[0]
-    outputString = run_CNN1D(network, CNN1D.trunc_dataset_1D(dico_trames, percent, nb_pack)[4], loginmdp[0])
-    # print(outputString)
-    # save_output(outputString, "outputV2.txt")
+    output_list = []
+    for i in range(nb_models):
+        outputString = run_CNN1D(list_models[i], CNN1D.trunc_dataset_1D(dico_trames, percent, nb_pack)[4], loginmdp[0])
+        print(outputString)
+        # save_output(outputString, "outputV3-" + str(i) +".txt")
 
     # neural_network.neural_network(dico_trames, percent)
 
