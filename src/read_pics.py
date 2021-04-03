@@ -210,7 +210,7 @@ def run_on_all_char(dico_trames, network, dicoequivalences):
 
 
 def get_proportions_in_split(split_list, dico_trames):
-    keyList = dico_trames.keys()
+    keyList = dico_trames.values()
     result = []
     for list in split_list:
         list_proportions = []
@@ -278,7 +278,7 @@ if __name__ == "__main__":
     list_models = get_model_list(nb_models, nb_pack, train_percent, new_train)
     output = use_models(list_models, dico_trames, nb_pack, loginmdp[0])
     split_output = split_output_list(output[0][1])
-    print(split_output)
+    split_output_proportions = get_proportions_in_split(split_output, corresp_cluster_file_dico)
 
         # save_output(outputString, "outputV3-" + str(i) +".txt")
 
