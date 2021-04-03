@@ -171,7 +171,7 @@ def save_output(resultstring, filename):
 def run_CNN1D(network, dicoequivalences, inputlist):
     finalString = ''
     finalList = []
-    for i in range(int(len(inputlist)/100)):
+    for i in range(len(inputlist) - 3):
         sample = np.array([inputlist[i], inputlist[i + 1], inputlist[i + 2], inputlist[i + 3]])
         test = network.predict(np.array([sample]))
         output = test[0]
