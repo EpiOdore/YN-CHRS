@@ -175,7 +175,7 @@ def save_output(resultstring, filename):
 def run_CNN1D(network, dicoequivalences, inputlist):
     finalString = ''
     finalList = []
-    for i in range(len(inputlist) - 3):
+    for i in range(int(len(inputlist)/100)):
         sample = np.array([inputlist[i], inputlist[i + 1], inputlist[i + 2], inputlist[i + 3]])
         test = network.predict(np.array([sample]))
         output = test[0]
@@ -220,6 +220,18 @@ def feed_models(models_list, dico_trames, nb_pack, input):
     for i in range(len(models_list)):
         (outputString, output_list) = run_CNN1D(list_models[i], CNN1D.trunc_dataset_1D(dico_trames, train_percent, nb_pack)[4], input)
         print(outputString)
+
+
+def split_output_list(output_list):
+    list_of_pools = []
+    pool = []
+    for i in range(len(output_list) - 2):
+        if output_list[i] != "pics_NOKEY" and output_list[i + 1] != "pics_NOKEY" and output_list[i + 2] != "pics_NOKEY":
+            pool.append(output_list[i + 2])
+        else:
+            list_of_pools.append(pool)
+            pool = []
+    return list_of_pools
 
 
 if __name__ == "__main__":
