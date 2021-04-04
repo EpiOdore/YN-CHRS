@@ -207,6 +207,7 @@ def run_on_all_char(dico_trames, network, dicoequivalences):
         for i in range(len(weightList)):
             weightList[i][1] = weightList[i][1] / len(outputList)
         allWeightsDico[key] = weightList
+        print(weightList)
     return allWeightsDico
 
 
