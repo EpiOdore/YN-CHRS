@@ -232,14 +232,16 @@ def run_on_all_char(dico_trames, network, dicoequivalences, name=None):
 
 def get_proportions_in_split(split_list, dico_trames):
     keyList = dico_trames.values()
-    result = []
+    result = {}
+    index = 0
     for list in split_list:
         list_proportions = []
         for key in keyList:
             keyCount = list.count(key)
             if keyCount != 0:
                 list_proportions.append([key, keyCount / len(list)])
-        result.append(list_proportions)
+        result[index] = list_proportions
+        index += 1
     return result
 
 
