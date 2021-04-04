@@ -244,9 +244,9 @@ def get_proportions_in_split(split_list, dico_trames):
     return result
 
 
-def get_model_list(nb_models, nb_pack, train_percent, new_train=False):
+def get_model_list(nb_models, nb_pack, train_percent, new_train=False, save_train=False):
     if new_train:
-        return [CNN1D.neural_network_1D(dico_trames, train_percent, i, nb_pack)[0] for i in range(nb_models)]
+        return [CNN1D.neural_network_1D(dico_trames, train_percent, i, nb_pack, save_train)[0] for i in range(nb_models)]
     else:
         return [tf.keras.models.load_model("./model_weight-" + str(i)) for i in range(nb_models)]
 
@@ -288,7 +288,7 @@ if __name__ == "__main__":
     mean = False
     new_train = True
     nb_models = 1
-    nb_pack = 5
+    nb_pack = 4
     # run_clustering(percent)
     dico_trames = get_all_bin("../data/")
     dico_trames_bruit = pre_treatment.addBruitGaussien(dico_trames)
