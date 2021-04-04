@@ -53,8 +53,10 @@ def compare_model_test_n_result(model_stat, output_framed_stat, correspondance_d
     model_coord_results = model_stat_coord(model_stat, correspondance_dico)
 
     results_close_to_coord_list = []
+    print("model and frame casted")
 
     for frame_coord in frame_coord_list:
+        print(frame_coord)
         list_dist = np.zeros(len(correspondance_dico))
         for i in range(len(model_coord_results)):
             list_dist[i] = np.linalg.norm(np.array(frame_coord)-np.array(model_coord_results[i]))
@@ -63,6 +65,7 @@ def compare_model_test_n_result(model_stat, output_framed_stat, correspondance_d
         for key, value in correspondance_dico.items():
             if value == minus_key:
                 results_close_to_coord_list += key
+                print(key)
                 break
 
-    print(results_close_to_coord_list)
+    # print(results_close_to_coord_list)
