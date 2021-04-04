@@ -219,6 +219,8 @@ def run_on_all_char(dico_trames, network, dicoequivalences, name=None):
             weightList[i][1] = weightList[i][1] / len(outputList)
         allWeightsDico[key] = weightList
 
+        print(weightList)
+
     if name != None:
         f = open(name, "w")
         f.write(str(allWeightsDico).replace("\'", '"'))
