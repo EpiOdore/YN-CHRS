@@ -177,7 +177,7 @@ def save_output(resultstring, filename):
 def run_CNN1D(network, dicoequivalences, inputlist):
     finalString = ''
     finalList = []
-    for i in range(len(inputlist) - 3):
+    for i in range((len(inputlist) - 3)):
         sample = np.array([inputlist[i], inputlist[i + 1], inputlist[i + 2], inputlist[i + 3]])
         test = network.predict(np.array([sample]))
         output = test[0]
@@ -307,10 +307,9 @@ if __name__ == "__main__":
     frames_results_per_models = [run_on_all_char(dico_trames, list_models[i], corresp_cluster_file_dico, "model_stat-" + str(i)) for i in range(len(list_models))]
     print("Get models stats")
 
-    print(frames_results_per_models)
     for i in range(len(frames_results_per_models)):
         post_treatment.compare_model_test_n_result(frames_results_per_models[i], split_output_proportions, corresp_cluster_file_dico)
-        print("Model " + str(i) +" done")
+        print("Model " + str(i) + " done")
 
     # save_output(outputString, "outputV3-" + str(i) +".txt")
 
