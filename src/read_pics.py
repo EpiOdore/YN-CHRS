@@ -15,6 +15,7 @@ import numpy as np
 import time
 import csv
 import tensorflow as tf
+import json
 
 
 def read_int(f):
@@ -194,7 +195,17 @@ def run_CNN1D(network, dicoequivalences, inputlist):
     return finalString, finalList
 
 
-def run_on_all_char(dico_trames, network, dicoequivalences):
+def run_on_all_char(dico_trames, network, dicoequivalences, name=None):
+    if name != None:
+        try:
+            f = open(str(name), "r")
+            print("Here")
+            content = f.read()
+            f.close()
+            return json.loads(content)
+        except Exception as e:
+            print(e.args)
+
     keyList = dico_trames.keys()
     allWeightsDico = {}
     for key, value in dico_trames.items():
@@ -207,6 +218,13 @@ def run_on_all_char(dico_trames, network, dicoequivalences):
         for i in range(len(weightList)):
             weightList[i][1] = weightList[i][1] / len(outputList)
         allWeightsDico[key] = weightList
+
+    if name != None:
+        f = open(name, "w")
+        f.write(str(allWeightsDico).replace("\'", '"'))
+        f.close()
+        print(name + "file saved")
+
     return allWeightsDico
 
 
@@ -272,6 +290,7 @@ if __name__ == "__main__":
     dico_trames = get_all_bin("../data/")
     all_trames = read_csv('statictrames-0_2.csv')
     loginmdp = dico_trames.pop("pics_LOGINMDP")
+    print(str(dico_trames.keys()).replace("\'", '"'))
     corresp_cluster_file_dico = get_correspondance_cluster_file_dico(dico_trames)
     # print_info_perf(all_trames, percent, dico_trames)
     # analysis_list, LOGMDP = mean_clustering.mean_clustering(dico_trames, percent, mean)
@@ -283,8 +302,10 @@ if __name__ == "__main__":
     split_output = split_output_list(output[0][1])
     split_output_proportions = get_proportions_in_split(split_output, corresp_cluster_file_dico)
     print("Output splitted")
-    frames_results_per_models = [run_on_all_char(dico_trames, model, corresp_cluster_file_dico) for model in list_models]
+    frames_results_per_models = [run_on_all_char(dico_trames, list_models[i], corresp_cluster_file_dico, "model_stat-" + str(i)) for i in range(len(list_models))]
     print("Get models stats")
+
+    print(frames_results_per_models)
     for i in range(len(frames_results_per_models)):
         post_treatment.compare_model_test_n_result(frames_results_per_models[i], split_output_proportions, corresp_cluster_file_dico)
         print("Model " + str(i) +" done")
