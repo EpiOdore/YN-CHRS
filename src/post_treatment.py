@@ -9,12 +9,12 @@ def get_key(to_find, dico):
 
 def output_framed_stat_to_coord(output_framed_stat, correspondance_dico):
     coord_list = []
-    print(output_framed_stat)
-    print(correspondance_dico)
-    for key, prob in output_framed_stat.items():
+    # print(output_framed_stat)
+    # print(correspondance_dico)
+    for block in output_framed_stat:
         frame_coord = np.zeros(len(correspondance_dico))
 
-        for tupple in prob:
+        for tupple in block:
              frame_coord[int(get_key(tupple[0], correspondance_dico))] = tupple[1]
 
         coord_list += [frame_coord]
@@ -24,14 +24,17 @@ def output_framed_stat_to_coord(output_framed_stat, correspondance_dico):
 
 def model_stat_coord(model_stat, correspondance_dico):
 
-    key_coord_dico = np.zeros(len(correspondance_dico))
-    for key_results in model_stat:
+    key_coord_dico = [[] for _ in range(len(correspondance_dico))]
+    for key, stats in model_stat.items():
         frame_coord = np.zeros(len(correspondance_dico))
+        # print(key_results[1])
+        # print(model_stat)
+        # print(key_results)
 
-        for tupple in key_results[1]:
-            frame_coord[int(get_key(key_results[0], correspondance_dico))] = tupple[1]
+        for tupple in stats:
+            frame_coord[int(get_key(tupple[0], correspondance_dico))] = tupple[1]
 
-        key_coord_dico[int(get_key(key_results[0], correspondance_dico))] = frame_coord
+        key_coord_dico[int(get_key(key, correspondance_dico))] = frame_coord
 
     return key_coord_dico
 
@@ -56,16 +59,15 @@ def compare_model_test_n_result(model_stat, output_framed_stat, correspondance_d
     print("model and frame casted")
 
     for frame_coord in frame_coord_list:
-        print(frame_coord)
         list_dist = np.zeros(len(correspondance_dico))
         for i in range(len(model_coord_results)):
             list_dist[i] = np.linalg.norm(np.array(frame_coord)-np.array(model_coord_results[i]))
 
         minus_key = list(list_dist).index(min(list_dist))
         for key, value in correspondance_dico.items():
-            if value == minus_key:
-                results_close_to_coord_list += key
-                print(key)
+            if int(key) == minus_key:
+                results_close_to_coord_list += value
                 break
 
-    # print(results_close_to_coord_list)
+    print(results_close_to_coord_list)
+    return results_close_to_coord_list

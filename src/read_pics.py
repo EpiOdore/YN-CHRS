@@ -177,7 +177,7 @@ def save_output(resultstring, filename):
 def run_CNN1D(network, dicoequivalences, inputlist):
     finalString = ''
     finalList = []
-    for i in range(len(inputlist) - 3):
+    for i in range((len(inputlist) - 3)):
         sample = np.array([inputlist[i], inputlist[i + 1], inputlist[i + 2], inputlist[i + 3]])
         test = network.predict(np.array([sample]))
         output = test[0]
@@ -232,16 +232,14 @@ def run_on_all_char(dico_trames, network, dicoequivalences, name=None):
 
 def get_proportions_in_split(split_list, dico_trames):
     keyList = dico_trames.values()
-    result = {}
-    index = 0
+    result = []
     for list in split_list:
         list_proportions = []
         for key in keyList:
             keyCount = list.count(key)
             if keyCount != 0:
                 list_proportions.append([key, keyCount / len(list)])
-        result[index] = list_proportions
-        index += 1
+        result.append(list_proportions)
     return result
 
 
@@ -309,10 +307,9 @@ if __name__ == "__main__":
     frames_results_per_models = [run_on_all_char(dico_trames, list_models[i], corresp_cluster_file_dico, "model_stat-" + str(i)) for i in range(len(list_models))]
     print("Get models stats")
 
-    print(frames_results_per_models)
     for i in range(len(frames_results_per_models)):
         post_treatment.compare_model_test_n_result(frames_results_per_models[i], split_output_proportions, corresp_cluster_file_dico)
-        print("Model " + str(i) +" done")
+        print("Model " + str(i) + " done")
 
     # save_output(outputString, "outputV3-" + str(i) +".txt")
 
