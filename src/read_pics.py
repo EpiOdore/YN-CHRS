@@ -286,7 +286,7 @@ def get_correspondance_cluster_file_dico(dico_trames):
 if __name__ == "__main__":
     train_percent = 0.8
     mean = False
-    new_train = True
+    new_train = False
     nb_models = 1
     nb_pack = 4
     # run_clustering(percent)
@@ -294,7 +294,6 @@ if __name__ == "__main__":
     dico_trames_bruit = pre_treatment.addBruitGaussien(dico_trames)
     # all_trames = read_csv('statictrames-0_2.csv')
     loginmdp = dico_trames.pop("pics_LOGINMDP")
-    print(str(dico_trames.keys()).replace("\'", '"'))
     corresp_cluster_file_dico = get_correspondance_cluster_file_dico(dico_trames)
     # print_info_perf(all_trames, percent, dico_trames)
     # analysis_list, LOGMDP = mean_clustering.mean_clustering(dico_trames, percent, mean)
@@ -309,10 +308,12 @@ if __name__ == "__main__":
     frames_results_per_models = [run_on_all_char(dico_trames, list_models[i], corresp_cluster_file_dico, "model_stat-" + str(i)) for i in range(len(list_models))]
     print("Get models stats")
 
+    packed_results_per_model = []
     for i in range(len(frames_results_per_models)):
-        post_treatment.compare_model_test_n_result(frames_results_per_models[i], split_output_proportions, corresp_cluster_file_dico)
+        packed_results_per_model += [post_treatment.compare_model_test_n_result(frames_results_per_models[i], split_output_proportions, corresp_cluster_file_dico)]
         print("Model " + str(i) + " done")
 
+    final_results = post_treatment.compare_results_per_model(packed_results_per_model)
     # save_output(outputString, "outputV3-" + str(i) +".txt")
 
     # neural_network.neural_network(dico_trames, percent)

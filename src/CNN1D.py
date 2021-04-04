@@ -85,8 +85,6 @@ def create_model(nb_pack):
 def neural_network_1D(dico_trames, percent, nb_model, nb_pack, save=False):
     truncated_dataset = trunc_dataset_1D(dico_trames, percent, nb_pack)
 
-    print(truncated_dataset[0].shape)
-
     model = create_model(nb_pack)
 
     model.fit(truncated_dataset[0], truncated_dataset[1], epochs=100, validation_data=(truncated_dataset[2], truncated_dataset[3]))

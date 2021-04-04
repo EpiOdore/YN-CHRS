@@ -64,10 +64,38 @@ def compare_model_test_n_result(model_stat, output_framed_stat, correspondance_d
             list_dist[i] = np.linalg.norm(np.array(frame_coord)-np.array(model_coord_results[i]))
 
         minus_key = list(list_dist).index(min(list_dist))
+        print()
         for key, value in correspondance_dico.items():
             if int(key) == minus_key:
-                results_close_to_coord_list += value
+                results_close_to_coord_list.append(value)
                 break
 
     print(results_close_to_coord_list)
     return results_close_to_coord_list
+
+
+def get_maximum(_list):
+    nb_occ = dict((x, _list.count(x)) for x in set(_list))
+    occ_max = max(nb_occ.values())
+    maxi = []
+
+    for key, value in nb_occ.items():
+        if value == occ_max:
+            maxi += key
+
+    return maxi
+
+
+def compare_results_per_model(results_per_model):
+
+    results = []
+    if len(results_per_model) == 0:
+        return results
+    for i in range(len(results_per_model[0])):
+        pack_result = []
+        for model_result in results_per_model:
+            pack_result += model_result[i]
+
+        results += get_maximum(pack_result)
+
+    return results
