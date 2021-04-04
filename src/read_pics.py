@@ -285,9 +285,9 @@ def get_correspondance_cluster_file_dico(dico_trames):
 if __name__ == "__main__":
     train_percent = 0.8
     mean = False
-    new_train = False
+    new_train = True
     nb_models = 1
-    nb_pack = 4
+    nb_pack = 5
     # run_clustering(percent)
     dico_trames = get_all_bin("../data/")
     all_trames = read_csv('statictrames-0_2.csv')

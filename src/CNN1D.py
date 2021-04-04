@@ -82,7 +82,7 @@ def create_model(nb_pack):
     return model
 
 
-def neural_network_1D(dico_trames, percent, nb_model, nb_pack):
+def neural_network_1D(dico_trames, percent, nb_model, nb_pack, save=False):
     truncated_dataset = trunc_dataset_1D(dico_trames, percent, nb_pack)
 
     print(truncated_dataset[0].shape)
@@ -91,7 +91,8 @@ def neural_network_1D(dico_trames, percent, nb_model, nb_pack):
 
     model.fit(truncated_dataset[0], truncated_dataset[1], epochs=100, validation_data=(truncated_dataset[2], truncated_dataset[3]))
 
-    model.save("./model_weight-" + str(nb_model))
+    if save:
+        model.save("./model_weight-" + str(nb_model))
 
     _, train_accuracy = model.evaluate(truncated_dataset[0], truncated_dataset[1])
     _, test_accuracy = model.evaluate(truncated_dataset[2], truncated_dataset[3])
