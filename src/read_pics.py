@@ -299,7 +299,7 @@ if __name__ == "__main__":
     # print_info_perf(all_trames, percent, dico_trames)
     # analysis_list, LOGMDP = mean_clustering.mean_clustering(dico_trames, percent, mean)
     # outputString = run_CNN1D(network, dicoequivalences, loginmdp[0])
-    list_models = get_model_list(nb_models, nb_pack, train_percent, new_train)
+    """list_models = get_model_list(nb_models, nb_pack, train_percent, new_train)
     print("Load models")
     output = use_models(list_models, dico_trames, nb_pack, loginmdp[0])
     print("Input treated")
@@ -311,7 +311,7 @@ if __name__ == "__main__":
 
     for i in range(len(frames_results_per_models)):
         post_treatment.compare_model_test_n_result(frames_results_per_models[i], split_output_proportions, corresp_cluster_file_dico)
-        print("Model " + str(i) + " done")
+        print("Model " + str(i) + " done")"""
 
     # save_output(outputString, "outputV3-" + str(i) +".txt")
 
