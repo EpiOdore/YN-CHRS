@@ -4,6 +4,7 @@ Script python pour ouvrir les fichiers de traces de clavier
 """
 import mean_clustering
 import post_treatment
+import pre_treatment
 # import neural_network
 import CNN1D
 import os
@@ -290,7 +291,8 @@ if __name__ == "__main__":
     nb_pack = 4
     # run_clustering(percent)
     dico_trames = get_all_bin("../data/")
-    all_trames = read_csv('statictrames-0_2.csv')
+    dico_trames_bruit = pre_treatment.addBruitGaussien(dico_trames)
+    # all_trames = read_csv('statictrames-0_2.csv')
     loginmdp = dico_trames.pop("pics_LOGINMDP")
     print(str(dico_trames.keys()).replace("\'", '"'))
     corresp_cluster_file_dico = get_correspondance_cluster_file_dico(dico_trames)
