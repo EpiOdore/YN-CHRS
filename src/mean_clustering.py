@@ -5,10 +5,6 @@ from sklearn.neighbors import KernelDensity
 
 def gaussian_kernel_trames(dico_data, key, percent):
     trames_train = dico_data[key][0][0: int(len(dico_data[key][0]) * percent)]
-    # params = {'bandwidth': np.logspace(-1, 1, 20)}
-    # grid = GridSearchCV(KernelDensity(), params)
-    # grid.fit(trames)
-    # print(key + " best bandwith: ", grid.best_estimator_.bandwidth, " best kernel: ", grid.best_estimator_.kernel)
     return KernelDensity(kernel='gaussian', bandwidth=0.1).fit(trames_train)
 
 
@@ -19,7 +15,7 @@ def mean_trames(dico_data, key):
         for i_coord in range(len(trame)):
             means_coord[i_coord] += trame[i_coord]
 
-    mean_func = lambda x: x / len(trames)
+    def mean_func(x): return x / len(trames)
 
     return list(map(mean_func, means_coord))
 
@@ -53,14 +49,15 @@ def test_mean_clustering(mean_trames_list, test_trames):
     res_trames = []
 
     for trames in test_trames:
-        temp_mean_trames_list = list(map(sum, list(map(lambda x: list(map(abs, list(x - trames))), list(mean_trames_list)))))
-        res_trames.append(temp_mean_trames_list.index(min(temp_mean_trames_list)))
+        temp_mean_trames_list = list(map(sum, list(
+            map(lambda x: list(map(abs, list(x - trames))), list(mean_trames_list)))))
+        res_trames.append(temp_mean_trames_list.index(
+            min(temp_mean_trames_list)))
 
     return res_trames.count(max(res_trames, key=res_trames.count)) / len(res_trames), max(res_trames, key=res_trames.count)
 
 
 def test_gaussian_kernel_clustering(gaussian_dico, test_trames, filename):
-    # train = test_trames[0: int(len(test_trames) * 0.8)]
     test = test_trames[int(len(test_trames) * 0.8):]
     score = 0
     for trame in test:
@@ -70,15 +67,7 @@ def test_gaussian_kernel_clustering(gaussian_dico, test_trames, filename):
 
         detected_value = max(score_dico, key=score_dico.get)
         score += int(detected_value == filename)
-        # print(detected_value)
-        # test_dico[key] = gaussian_dico[key].score_samples(test_trames)
     return score / len(test)
-
-    minus = min(test_dico, key=test_dico.get)
-
-    for key, value in test_dico.items():
-        if value == key:
-            return minus, key
 
 
 def print_info_perfo_gauss(gaussian_dico, trames_dico):
@@ -86,10 +75,11 @@ def print_info_perfo_gauss(gaussian_dico, trames_dico):
     success = 0
 
     trames_dico.pop("pics_NOKEY")
-    gaussian_dico.pop   ("pics_NOKEY")
+    gaussian_dico.pop("pics_NOKEY")
 
     for filename, data in trames_dico.items():
-        ratio = test_gaussian_kernel_clustering(gaussian_dico, data[0], filename)
+        ratio = test_gaussian_kernel_clustering(
+            gaussian_dico, data[0], filename)
         print("File tested: " + filename + " ratio: ", ratio)
         success += ratio
 
@@ -103,4 +93,5 @@ def print_info_perf_mean(mean_trames_list, dico_data):
 
     for key in dico_data:
         res = test_mean_clustering(mean_trames_list, dico_data[key][0])
-        print("File " + key + " success percentage: ", res[0], " Cluster: ", res[1])
+        print("File " + key + " success percentage: ",
+              res[0], " Cluster: ", res[1])
