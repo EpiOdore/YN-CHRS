@@ -262,8 +262,8 @@ def use_models(models_list, dico_trames, nb_pack, input):
 def split_output_list(output_list):
     list_of_pools = []
     pool = []
-    for i in range(len(output_list) - 2):
-        if output_list[i] != "pics_NOKEY" and output_list[i + 1] != "pics_NOKEY" and output_list[i + 2] != "pics_NOKEY":
+    for i in range(len(output_list) - 7):
+        if output_list[i] != "pics_NOKEY" and output_list[i + 1] != "pics_NOKEY" and output_list[i + 2] != "pics_NOKEY" and output_list[i + 3] != "pics_NOKEY" and output_list[i + 4] != "pics_NOKEY" and output_list[i + 5] != "pics_NOKEY" and output_list[i + 6] != "pics_NOKEY":
             pool.append(output_list[i + 2])
         else:
             if pool != []:
