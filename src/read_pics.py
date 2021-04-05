@@ -220,7 +220,7 @@ def run_on_all_char(dico_trames, network, dicoequivalences, name=None):
             weightList[i][1] = weightList[i][1] / len(outputList)
         allWeightsDico[key] = weightList
 
-        print(weightList)
+        # print(weightList)
 
     if name != None:
         f = open(name, "w")
@@ -287,7 +287,7 @@ if __name__ == "__main__":
     train_percent = 0.8
     mean = False
     new_train = False
-    nb_models = 1
+    nb_models = 4
     nb_pack = 4
     # run_clustering(percent)
     dico_trames = get_all_bin("../data/")
@@ -313,7 +313,9 @@ if __name__ == "__main__":
         packed_results_per_model += [post_treatment.compare_model_test_n_result(frames_results_per_models[i], split_output_proportions, corresp_cluster_file_dico)]
         print("Model " + str(i) + " done")
 
-    final_results = post_treatment.compare_results_per_model(packed_results_per_model)
+    for result in packed_results_per_model:
+        print(result)
+    # final_results = post_treatment.compare_results_per_model(packed_results_per_model)
     # save_output(outputString, "outputV3-" + str(i) +".txt")
 
     # neural_network.neural_network(dico_trames, percent)
