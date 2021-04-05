@@ -288,13 +288,7 @@ def get_correspondance_cluster_file_dico(dico_trames):
 
     return correspondance_dico
 
-
-if __name__ == "__main__":
-    train_percent = 0.8
-    mean = False
-    new_train = False
-    nb_models = 4
-    nb_pack = 4
+def run_project(train_percent, new_train, nb_models, nb_pack):
     dico_trames = get_all_bin("../data/")
     dico_trames_bruit = pre_treatment.addBruitGaussien(dico_trames)
     loginmdp = dico_trames.pop("pics_LOGINMDP")
@@ -320,3 +314,8 @@ if __name__ == "__main__":
 
     for result in packed_results_per_model:
         print(result)
+
+
+if __name__ == "__main__":
+    run_project(0.8, False, 4, 4)
+
