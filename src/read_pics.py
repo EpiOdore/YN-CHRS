@@ -249,17 +249,17 @@ def get_proportions_in_split(split_list, dico_trames):
     return result
 
 
-def get_model_list(nb_models, nb_pack, train_percent, new_train=False, save_train=False):
+def get_model_list(nb_models, nb_pack, train_percent, dico_trames, new_train=False, save_train=False):
     if new_train:
         return [CNN1D.neural_network_1D(dico_trames, train_percent, i, nb_pack, save_train)[0] for i in range(nb_models)]
     else:
         return [tf.keras.models.load_model("./model_weight-" + str(i)) for i in range(nb_models)]
 
 
-def use_models(models_list, dico_trames, nb_pack, input):
+def use_models(models_list, dico_trames, nb_pack, input, train_percent):
     output = []
     for i in range(len(models_list)):
-        (outputString, output_list) = run_CNN1D(list_models[i], CNN1D.trunc_dataset_1D(
+        (outputString, output_list) = run_CNN1D(models_list[i], CNN1D.trunc_dataset_1D(
             dico_trames, train_percent, nb_pack)[4], input)
         output.append((outputString, output_list))
     return output
@@ -288,15 +288,16 @@ def get_correspondance_cluster_file_dico(dico_trames):
 
     return correspondance_dico
 
-def run_project(train_percent, new_train, nb_models, nb_pack):
+def run_project(train_percent, nb_models, nb_pack, add_bruit=False, new_train=False, save_train = False):
     dico_trames = get_all_bin("../data/")
-    dico_trames_bruit = pre_treatment.addBruitGaussien(dico_trames)
+    if add_bruit:
+        dico_trames = pre_treatment.addBruitGaussien(dico_trames)
     loginmdp = dico_trames.pop("pics_LOGINMDP")
     corresp_cluster_file_dico = get_correspondance_cluster_file_dico(
         dico_trames)
-    list_models = get_model_list(nb_models, nb_pack, train_percent, new_train)
-    print("Load models")
-    output = use_models(list_models, dico_trames, nb_pack, loginmdp[0])
+    list_models = get_model_list(nb_models, nb_pack, train_percent, dico_trames, new_train, save_train)
+    print("Loading models")
+    output = use_models(list_models, dico_trames, nb_pack, loginmdp[0], train_percent)
     print("Input treated")
     split_output = split_output_list(output[0][1])
     split_output_proportions = get_proportions_in_split(
@@ -317,5 +318,5 @@ def run_project(train_percent, new_train, nb_models, nb_pack):
 
 
 if __name__ == "__main__":
-    run_project(0.8, False, 4, 4)
+    run_project(0.8, 1, 4, True, True)
 
