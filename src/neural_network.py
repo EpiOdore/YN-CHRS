@@ -24,7 +24,8 @@ def trunc_dataset(dico_trames, percent):
         test_trames += trames[int(len(trames) * (1 - percent)):]
 
         train_results += [cluster] * len(trames[0: int(len(trames) * percent)])
-        test_results += [cluster] * len(trames[int(len(trames) * (1 - percent)):])
+        test_results += [cluster] * \
+            len(trames[int(len(trames) * (1 - percent)):])
 
         dico_corresp_cluster_file[cluster] = key
         cluster += 1
@@ -52,8 +53,6 @@ def cast_data(trames):
 
 
 def packed_trames(trames, nb_pack):
-    # trames = concatenate_trames(trames)
-    # trames = cast_data(trames)
     end_selected_trames = len(trames) - (len(trames) % nb_pack)
 
     packs = []
@@ -67,8 +66,6 @@ def packed_trames(trames, nb_pack):
                 trame[j] = np.array(trame[j])
         packs.append(np.array(pack))
         start = i
-    # packs = np.array(packs)
-    # print("test")
     return packs
 
 
@@ -90,9 +87,10 @@ def trunc_packed_dataset(dico_trames, percent, nb_pack):
         if cluster == float(10):
             break
         trames = values[0]
-        # print(len(trames[0: int(len(trames) * percent)]))
-        packs_train = packed_trames(trames[0: int(len(trames) * percent)], nb_pack)
-        packs_test = packed_trames(trames[int(len(trames) * (1 - percent)):], nb_pack)
+        packs_train = packed_trames(
+            trames[0: int(len(trames) * percent)], nb_pack)
+        packs_test = packed_trames(
+            trames[int(len(trames) * (1 - percent)):], nb_pack)
         train_trames += packs_train
         test_trames += packs_test
 
@@ -102,64 +100,51 @@ def trunc_packed_dataset(dico_trames, percent, nb_pack):
         dico_corresp_cluster_file[cluster] = key
         cluster += 1
 
-    # train_trames = [np.array(i) for i in train_trames]
-    # test_trames = [np.array(i) for i in test_trames]
-    # print("tes")
-
     return np.array(train_trames), np.array(train_results), np.array(test_trames), np.array(test_results), dico_corresp_cluster_file
 
 
 def neural_network(dico_trames, percent):
-    # print(len(dico_trames))
     truncated_dataset = trunc_dataset(dico_trames, percent)
 
     model = tf.keras.Sequential([
         tf.keras.layers.Dense(17, input_dim=17, activation='relu'),
         tf.keras.layers.Dense(17 * 2, activation='relu'),
-        # tf.keras.layers.Dense(int(17 * 0.6 + 42), activation='relu'),
         tf.keras.layers.Dense(int(17 * 0.6 + 42), activation='relu'),
         tf.keras.layers.Dense(42, activation='relu'),
         tf.keras.layers.Dense(42, activation='softmax')
     ])
 
-    # print(truncated_dataset[0][0])
-
-    model.compile(loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), optimizer='adam', metrics=['accuracy'])
+    model.compile(loss=tf.keras.losses.SparseCategoricalCrossentropy(
+        from_logits=True), optimizer='adam', metrics=['accuracy'])
 
     model.fit(truncated_dataset[0], truncated_dataset[1], epochs=100)
 
-    _, train_accuracy = model.evaluate(truncated_dataset[0], truncated_dataset[1])
-    _, test_accuracy = model.evaluate(truncated_dataset[2], truncated_dataset[3])
+    _, train_accuracy = model.evaluate(
+        truncated_dataset[0], truncated_dataset[1])
+    _, test_accuracy = model.evaluate(
+        truncated_dataset[2], truncated_dataset[3])
 
     print("Accuracy on train trames: ", train_accuracy)
     print("Accuracy on test trames: ", test_accuracy)
 
 
 def convolute_neural_network(dico_trames, percent):
-    # print(len(dico_trames))
     truncated_dataset = trunc_packed_dataset(dico_trames, percent, 17)
 
     print(truncated_dataset[0])
 
     model = tf.keras.Sequential([
         tf.keras.layers.Conv1D(17, 17, activation='relu', input_shape=(17, 17, 1))])
-        # tf.keras.layers.MaxPooling2D((1, 1)),
-        # tf.keras.layers.Conv2D(17 * 2, (17, 1), activation='relu'),
-        # tf.keras.layers.MaxPooling2D((1, 1)),
-        # tf.keras.layers.Conv2D(17 * 2, (17, 1), activation='relu'),
-        # tf.keras.layers.Flatten(),
-        # tf.keras.layers.Dense(17 * 2, activation='relu'),
-        # tf.keras.layers.Dense(42, activation='softmax')
-    # ])
 
     print("HERE")
 
-    model.compile(loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), optimizer='adam', metrics=['accuracy'])
+    model.compile(loss=tf.keras.losses.SparseCategoricalCrossentropy(
+        from_logits=True), optimizer='adam', metrics=['accuracy'])
 
-    model.fit(truncated_dataset[0], truncated_dataset[1], epochs=100, validation_data=(truncated_dataset[2], truncated_dataset[3]))
+    model.fit(truncated_dataset[0], truncated_dataset[1], epochs=100, validation_data=(
+        truncated_dataset[2], truncated_dataset[3]))
 
-    _, train_accuracy = model.evaluate(truncated_dataset[0], truncated_dataset[1], )
+    _, train_accuracy = model.evaluate(
+        truncated_dataset[0], truncated_dataset[1], )
 
     print("Accuracy on train trames: ", train_accuracy)
-    # print("Accuracy on test trames: ", test_accuracy)
-
