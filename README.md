@@ -7,7 +7,7 @@ Au sein de celui-ci, on retrouve :
     - les dossiers model_weight contenant des modèles pré-entrainés, dont les poids ont été sauvegardés afin d'éviter de
     devoir effectuer l'entrainement à chaque lancement.
 
-    - le fichier read_pics.py contenant les fonctions fournies ainsi que les fonctions permettant de crééer et
+    - le fichier read_pics.py contenant les fonctions fournies ainsi que les fonctions permettant de créer et
     d'utiliser les modèles.
 
     - le fichier CNN1D.py contenant l'implémentation du réseau neuronal convolutif (CNN) final utilisé.
