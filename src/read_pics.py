@@ -5,7 +5,6 @@ Script python pour ouvrir les fichiers de traces de clavier
 import mean_clustering
 import post_treatment
 import pre_treatment
-# import neural_network
 import CNN1D
 import os
 from os.path import isfile, join
@@ -51,7 +50,8 @@ def get_pics_from_file(filename):
     info["nb_pics"] = read_int(f_pic)
     print("Nb pics par trame: " + str(info["nb_pics"]))
     info["freq_sampling_khz"] = read_double(f_pic)
-    print("Frequence d'echantillonnage: " + str(info["freq_sampling_khz"]) + " kHz")
+    print("Frequence d'echantillonnage: " +
+          str(info["freq_sampling_khz"]) + " kHz")
     info["freq_trame_hz"] = read_double(f_pic)
     print("Frequence trame: " + str(info["freq_trame_hz"]) + " Hz")
     info["freq_pic_khz"] = read_double(f_pic)
@@ -81,7 +81,8 @@ def get_all_bin(path):
     dico_files_content = {}
 
     for file in all_files:
-        dico_files_content[os.path.splitext(file)[0]] = get_pics_from_file(path + file)
+        dico_files_content[os.path.splitext(
+            file)[0]] = get_pics_from_file(path + file)
 
     return dico_files_content
 
@@ -94,7 +95,8 @@ def get_letters_trames(path, percent):
     name = "A"
     trames = []
     while (name <= "Z"):
-        trames += dico["pics_" + name][0][0:int(len(dico["pics_" + name][0]) * percent)]
+        trames += dico["pics_" +
+                       name][0][0:int(len(dico["pics_" + name][0]) * percent)]
         name = chr(ord(name) + 1)
     return trames
 
@@ -104,8 +106,8 @@ def get_letters_trames(path, percent):
 # OUT: list(int)
 def get_clusters(listoflists, number):
     listoflists = np.array(listoflists)
-    clustering = AgglomerativeClustering(n_clusters=number).fit_predict(listoflists)
-    # clustering = KMeans(n_clusters=number).fit_predict(listoflists)
+    clustering = AgglomerativeClustering(
+        n_clusters=number).fit_predict(listoflists)
     return clustering
 
 
@@ -123,10 +125,13 @@ def print_info_perf(list_trames, percent, dico_data, letter=True):
     clusters_detected = []
 
     for i in range(1, 27):
-        sub_list = list_trames[start:start + int(len(dico_data["pics_" + name][0]) * percent)]
-        ratio = sub_list.count(max(sub_list, key=sub_list.count)) / len(sub_list)
+        sub_list = list_trames[start:start +
+                               int(len(dico_data["pics_" + name][0]) * percent)]
+        ratio = sub_list.count(
+            max(sub_list, key=sub_list.count)) / len(sub_list)
         cluster = max(sub_list, key=sub_list.count)
-        print("Letter " + name + " success percentage: ", ratio, " Cluster: ", cluster)
+        print("Letter " + name + " success percentage: ",
+              ratio, " Cluster: ", cluster)
         name = chr(ord(name) + 1)
         start += len(sub_list)
 
@@ -179,7 +184,8 @@ def run_CNN1D(network, dicoequivalences, inputlist):
     finalString = ''
     finalList = []
     for i in range((len(inputlist) - 3)):
-        sample = np.array([inputlist[i], inputlist[i + 1], inputlist[i + 2], inputlist[i + 3]])
+        sample = np.array([inputlist[i], inputlist[i + 1],
+                          inputlist[i + 2], inputlist[i + 3]])
         test = network.predict(np.array([sample]))
         output = test[0]
         maxval = max(output)
@@ -211,7 +217,8 @@ def run_on_all_char(dico_trames, network, dicoequivalences, name=None):
     allWeightsDico = {}
     for key, value in dico_trames.items():
         weightList = []
-        outputString, outputList = run_CNN1D(network, dicoequivalences, value[0])
+        outputString, outputList = run_CNN1D(
+            network, dicoequivalences, value[0])
         for key2 in keyList:
             keyCount = outputList.count(key2)
             if keyCount != 0:
@@ -219,8 +226,6 @@ def run_on_all_char(dico_trames, network, dicoequivalences, name=None):
         for i in range(len(weightList)):
             weightList[i][1] = weightList[i][1] / len(outputList)
         allWeightsDico[key] = weightList
-
-        # print(weightList)
 
     if name != None:
         f = open(name, "w")
@@ -254,7 +259,8 @@ def get_model_list(nb_models, nb_pack, train_percent, new_train=False, save_trai
 def use_models(models_list, dico_trames, nb_pack, input):
     output = []
     for i in range(len(models_list)):
-        (outputString, output_list) = run_CNN1D(list_models[i], CNN1D.trunc_dataset_1D(dico_trames, train_percent, nb_pack)[4], input)
+        (outputString, output_list) = run_CNN1D(list_models[i], CNN1D.trunc_dataset_1D(
+            dico_trames, train_percent, nb_pack)[4], input)
         output.append((outputString, output_list))
     return output
 
@@ -289,76 +295,28 @@ if __name__ == "__main__":
     new_train = False
     nb_models = 4
     nb_pack = 4
-    # run_clustering(percent)
     dico_trames = get_all_bin("../data/")
     dico_trames_bruit = pre_treatment.addBruitGaussien(dico_trames)
-    # all_trames = read_csv('statictrames-0_2.csv')
     loginmdp = dico_trames.pop("pics_LOGINMDP")
-    corresp_cluster_file_dico = get_correspondance_cluster_file_dico(dico_trames)
-    # print_info_perf(all_trames, percent, dico_trames)
-    # analysis_list, LOGMDP = mean_clustering.mean_clustering(dico_trames, percent, mean)
-    # outputString = run_CNN1D(network, dicoequivalences, loginmdp[0])
+    corresp_cluster_file_dico = get_correspondance_cluster_file_dico(
+        dico_trames)
     list_models = get_model_list(nb_models, nb_pack, train_percent, new_train)
     print("Load models")
     output = use_models(list_models, dico_trames, nb_pack, loginmdp[0])
     print("Input treated")
     split_output = split_output_list(output[0][1])
-    split_output_proportions = get_proportions_in_split(split_output, corresp_cluster_file_dico)
+    split_output_proportions = get_proportions_in_split(
+        split_output, corresp_cluster_file_dico)
     print("Output splitted")
-    frames_results_per_models = [run_on_all_char(dico_trames, list_models[i], corresp_cluster_file_dico, "model_stat-" + str(i)) for i in range(len(list_models))]
+    frames_results_per_models = [run_on_all_char(
+        dico_trames, list_models[i], corresp_cluster_file_dico, "model_stat-" + str(i)) for i in range(len(list_models))]
     print("Get models stats")
 
     packed_results_per_model = []
     for i in range(len(frames_results_per_models)):
-        packed_results_per_model += [post_treatment.compare_model_test_n_result(frames_results_per_models[i], split_output_proportions, corresp_cluster_file_dico)]
+        packed_results_per_model += [post_treatment.compare_model_test_n_result(
+            frames_results_per_models[i], split_output_proportions, corresp_cluster_file_dico)]
         print("Model " + str(i) + " done")
 
     for result in packed_results_per_model:
         print(result)
-    # final_results = post_treatment.compare_results_per_model(packed_results_per_model)
-    # save_output(outputString, "outputV3-" + str(i) +".txt")
-
-    # neural_network.neural_network(dico_trames, percent)
-
-    # if mean:
-    #     mean_clustering.test_mean_clustering(analysis_list, dico_trames["pics_M"][0])
-    #     mean_clustering.print_info_perf_mean(analysis_list, dico_trames)
-    # else:
-    #     print(dico_trames["pics_M"][0])
-        # mean_clustering.print_info_perfo_gauss(analysis_list, dico_trames)
-        # mean_clustering.test_gaussian_kernel_clustering(analysis_list, LOGMDP, "pics_G")
-        # mean_clustering.test_gaussian_kernel_clustering(analysis_list, dico_trames["pics_G"][0], "pics_G")
-
-
-
-    """pics_nokey, info = get_pics_from_file("../data/pics_NOKEY.bin")
-    pics_pad0, info = get_pics_from_file("../data/pics_0.bin")
-
-    ######### Pics ############
-    # PAD-0 0
-    plt.figure(1)
-    plt.subplot(311)
-    plt.plot(range(1,info["nb_pics"]+1), pics_nokey[0], 'ko')
-    plt.xlabel('numéro de pic')
-    plt.ylabel('valeur du pic')
-    plt.title('PAD-0 0')
-    plt.ylim(0, 1.5)
-    plt.grid(b=True, which='both')
-    # PAD-0 1
-    plt.subplot(312)
-    plt.plot(range(1,info["nb_pics"]+1), pics_nokey[1], 'ko')
-    plt.xlabel('numéro de pic')
-    plt.ylabel('valeur du pic')
-    plt.title('PAD-0 1')
-    plt.ylim(0, 1.5)
-    plt.grid(b=True, which='both')
-    # PAD-0 2
-    plt.subplot(313)
-    plt.plot(range(1,info["nb_pics"]+1), pics_nokey[2], 'ko')
-    plt.xlabel('numéro de pic')
-    plt.ylabel('valeur du pic')
-    plt.title('PAD-0 2')
-    plt.ylim(0, 1.5)
-    plt.grid(b=True, which='both')
-    #
-    plt.show()"""
