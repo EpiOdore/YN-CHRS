@@ -9,13 +9,12 @@ def get_key(to_find, dico):
 
 def output_framed_stat_to_coord(output_framed_stat, correspondance_dico):
     coord_list = []
-    # print(output_framed_stat)
-    # print(correspondance_dico)
     for block in output_framed_stat:
         frame_coord = np.zeros(len(correspondance_dico))
 
         for tupple in block:
-             frame_coord[int(get_key(tupple[0], correspondance_dico))] = tupple[1]
+            frame_coord[int(
+                get_key(tupple[0], correspondance_dico))] = tupple[1]
 
         coord_list += [frame_coord]
 
@@ -27,12 +26,10 @@ def model_stat_coord(model_stat, correspondance_dico):
     key_coord_dico = [[] for _ in range(len(correspondance_dico))]
     for key, stats in model_stat.items():
         frame_coord = np.zeros(len(correspondance_dico))
-        # print(key_results[1])
-        # print(model_stat)
-        # print(key_results)
 
         for tupple in stats:
-            frame_coord[int(get_key(tupple[0], correspondance_dico))] = tupple[1]
+            frame_coord[int(
+                get_key(tupple[0], correspondance_dico))] = tupple[1]
 
         key_coord_dico[int(get_key(key, correspondance_dico))] = frame_coord
 
@@ -52,7 +49,8 @@ def dico_to_list(point_a, point_b):
 
 
 def compare_model_test_n_result(model_stat, output_framed_stat, correspondance_dico):
-    frame_coord_list = output_framed_stat_to_coord(output_framed_stat, correspondance_dico)
+    frame_coord_list = output_framed_stat_to_coord(
+        output_framed_stat, correspondance_dico)
     model_coord_results = model_stat_coord(model_stat, correspondance_dico)
 
     results_close_to_coord_list = []
@@ -61,7 +59,8 @@ def compare_model_test_n_result(model_stat, output_framed_stat, correspondance_d
     for frame_coord in frame_coord_list:
         list_dist = np.zeros(len(correspondance_dico))
         for i in range(len(model_coord_results)):
-            list_dist[i] = np.linalg.norm(np.array(frame_coord)-np.array(model_coord_results[i]))
+            list_dist[i] = np.linalg.norm(
+                np.array(frame_coord)-np.array(model_coord_results[i]))
 
         minus_key = list(list_dist).index(min(list_dist))
         print()
